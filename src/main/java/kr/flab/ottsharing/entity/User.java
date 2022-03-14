@@ -13,9 +13,9 @@ public class User {
 
     @Id
     @Column(name = "user_id")
-    private Long userid;
+    private Long userId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "created_timestamp")
-    private LocalDateTime createdTimeOfUser;
+    private LocalDateTime createdTime;
 }
