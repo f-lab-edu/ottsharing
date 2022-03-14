@@ -16,6 +16,9 @@ public class User {
     private Long userid;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+<<<<<<< HEAD
     @Column(name = "created_timestamp")
+=======
+>>>>>>> 85689b106cf631d77955d3b07325afe74d01b703
     private LocalDateTime createdTimeOfUser;
 }
