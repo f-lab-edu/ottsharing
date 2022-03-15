@@ -1,16 +1,20 @@
 package kr.flab.ottsharing.repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.flab.ottsharing.entity.User;
 
 @SpringBootTest
+@Transactional
+// @RunWith(SpringJUnit4ClassRunner.class)
 public class UserRepositoryTest {
 
     @Autowired
@@ -22,18 +26,11 @@ public class UserRepositoryTest {
             .userId("유저1")
             .build();
 
-        User user2 = User.builder()
-            .userId("유저2")
-            .build();
-
-        User user3 = User.builder()
-            .userId("유저3")
-            .build();
-
         userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
-    }
+
+        User result = userRepository.findById(user1.getUserId()).get();
+        Assertions.assertThat(user1).isEqualTo(result);
+   }
 
 
 }
