@@ -26,7 +26,7 @@ public class User {
     @Column(name = "user_id")
     private String userId;
 
-    // @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+
     @Column(name = "created_timestamp")
     @CreationTimestamp
     private LocalDateTime createdTime;
