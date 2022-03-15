@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.flab.ottsharing.entity.User;
 
 @SpringBootTest
-@Transactional
 public class UserRepositoryTest {
 
     @Autowired
@@ -21,17 +20,14 @@ public class UserRepositoryTest {
     void 내용넣기테스트(){
         User user1 = User.builder()
             .userId("유저1")
-            .createdTime(LocalDateTime.now())
             .build();
 
         User user2 = User.builder()
             .userId("유저2")
-            .createdTime(LocalDateTime.now())
             .build();
 
         User user3 = User.builder()
             .userId("유저3")
-            .createdTime(LocalDateTime.now())
             .build();
 
         userRepository.save(user1);
