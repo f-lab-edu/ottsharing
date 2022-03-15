@@ -1,0 +1,21 @@
+package kr.flab.ottsharing.entity;
+
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+@Entity
+public class User {
+
+    @Id
+    @Column(name = "user_id")
+    private Long userId;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Column(name = "created_timestamp")
+    private LocalDateTime createdTime;
+}
