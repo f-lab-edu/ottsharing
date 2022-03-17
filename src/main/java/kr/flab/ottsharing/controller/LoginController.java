@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class LoginController {
 
     private final LoginService loginService;
-    
+
     @PostMapping("/login")
     public String IdCheck(@RequestParam String userId,HttpServletResponse response){
 
