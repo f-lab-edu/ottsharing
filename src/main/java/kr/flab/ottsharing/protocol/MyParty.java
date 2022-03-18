@@ -2,6 +2,7 @@ package kr.flab.ottsharing.protocol;
 
 import java.util.List;
 
+import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
 import lombok.Getter;
 

@@ -15,6 +15,6 @@ public class MyPartyController {
 
     @GetMapping("/myParty")
     public MyParty viewMyParty(@CookieValue(name = "memberId", required = false) String userId) {
-        return myPartyService.getMyParty("유저2");
+        return myPartyService.getMyParty(userId);
     }
 }
