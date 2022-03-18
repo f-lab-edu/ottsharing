@@ -44,9 +44,9 @@ public class LoginController {
 
     @PostMapping("/logout")
     public ResponseEntity logout(HttpServletResponse response) {
-        Cookie kc = new Cookie("memberId", null);
+        Cookie cookie = new Cookie("memberId", null);
         kc.setMaxAge(0);
-        response.addCookie(kc);
+        response.addCookie(cookie);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
