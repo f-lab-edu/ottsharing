@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +40,15 @@ public class LoginController {
 
 
         return loginMember.getUserId();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity logout(HttpServletResponse response) {
+        Cookie kc = new Cookie("memberId", null);
+        kc.setMaxAge(0);
+        response.addCookie(kc);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
