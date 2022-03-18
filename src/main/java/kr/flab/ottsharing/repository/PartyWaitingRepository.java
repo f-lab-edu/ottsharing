@@ -2,6 +2,7 @@ package kr.flab.ottsharing.repository;
 
 import kr.flab.ottsharing.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import kr.flab.ottsharing.entity.PartyWaiting;
@@ -17,4 +18,6 @@ public interface PartyWaitingRepository extends JpaRepository<PartyWaiting, Inte
 
     @Override
     void deleteById(Integer id);
+
+    boolean existsBy();
 }
