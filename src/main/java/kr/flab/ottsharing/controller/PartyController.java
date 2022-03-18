@@ -29,4 +29,17 @@ public class PartyController {
 
         }
     }
+
+    @PostMapping("/party/join")
+    public String joinParty(@RequestParam String userId){
+
+        if(partyServ.pickParty().size() != 0) {
+            partyServ.getInParty(userId,partyServ.pickParty().get(0));
+            return "파티에 참여되었습니다";
+        } else{
+            waitingServ.putWaitingList(userId);
+            return "파티 참여 대기중입니다";
+        }
+
+    }
 }

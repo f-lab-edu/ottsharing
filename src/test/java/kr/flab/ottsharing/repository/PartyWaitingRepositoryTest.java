@@ -31,7 +31,7 @@ public class PartyWaitingRepositoryTest {
         final User savedUser = userRepo.save(user);
 
         // when
-        final PartyWaiting wait = new PartyWaiting(savedUser);
+        final PartyWaiting wait = PartyWaiting.builder().user(savedUser).build();
         final PartyWaiting savedWait = waitRepo.save(wait);
 
         // then
@@ -50,7 +50,7 @@ public class PartyWaitingRepositoryTest {
             User user = User.builder().userId(String.valueOf(i)).build();
             users[i] = userRepo.save(user);
 
-            PartyWaiting wait = new PartyWaiting(user);
+            PartyWaiting wait = PartyWaiting.builder().user(user).build();
             waits[i] = waitRepo.save(wait);
         }
 

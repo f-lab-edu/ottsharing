@@ -3,8 +3,10 @@ package kr.flab.ottsharing.service;
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.PartyWaiting;
+import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
+import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ public class PartyWaitingService {
 
     private final PartyWaitingRepository waitRepo;
     private final PartyMemberRepository memberRepo;
+    private final UserRepository userRepo;
 
     public boolean cheackWaitingPersonExist(){
         return waitRepo.existsBy();
@@ -31,5 +34,13 @@ public class PartyWaitingService {
         }
 
         return memberNumber;
+    }
+
+    public void putWaitingList(String waitmemberId){
+
+        User waitmember = userRepo.getById(waitmemberId);
+        PartyWaiting member = PartyWaiting.builder().user(waitmember).build();
+        waitRepo.save(member);
+
     }
 }

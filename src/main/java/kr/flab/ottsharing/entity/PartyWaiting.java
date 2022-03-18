@@ -4,17 +4,17 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
+
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "partyWaiting")
 public class PartyWaiting {
     @Id
@@ -31,7 +31,4 @@ public class PartyWaiting {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    public PartyWaiting(User user) {
-        this.user = user;
-    }
 }
