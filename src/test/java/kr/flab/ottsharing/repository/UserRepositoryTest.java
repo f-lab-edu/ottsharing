@@ -45,7 +45,7 @@ public class UserRepositoryTest {
     @Test
     void 가입_테스트(){
 
-        User result = userRepository.findOneByUserId(user1.getUserId());
+        User result = userRepository.findByUserId(user1.getUserId());
         assertEquals("유저1", result.getUserId());
         assertEquals("1234", result.getUserPassword());
         assertEquals("email1", result.getEmail());
