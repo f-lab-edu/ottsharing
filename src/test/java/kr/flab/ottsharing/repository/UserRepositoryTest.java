@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -28,9 +29,11 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
-    void 내용넣기_테스트(){
-        User user1 = User.builder()
+    User user1;
+
+    @BeforeEach
+    public void before(){
+        user1 = User.builder()
                 .userId("유저1")
                 .userPassword("1234")
                 .email("email1")
@@ -38,26 +41,23 @@ public class UserRepositoryTest {
                 .build();
 
         userRepository.save(user1);
+    }
+    @Test
+    void 가입_테스트(){
 
         User result = userRepository.findOneByUserId(user1.getUserId());
         assertEquals("유저1", result.getUserId());
         assertEquals("1234", result.getUserPassword());
         assertEquals("email1", result.getEmail());
+
    }
 
     @Test
     void 탈퇴_테스트() {
-        User user1 = User.builder()
-                .userId("유저1")
-                .userPassword("1234")
-                .email("email1")
-                .money(0l)
-                .build();
 
-        userRepository.save(user1);
         userRepository.deleteById(user1.getId());
-        Optional<User> result = userRepository.findByUserId(user1.getUserId());
-        assertEquals(false, result.isPresent());
+        boolean result = userRepository.existsByUserId(user1.getUserId());
+        assertEquals(false, result);
 
     }
 }
