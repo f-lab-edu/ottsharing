@@ -9,9 +9,9 @@ import kr.flab.ottsharing.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    Optional<User> findByUserId(String userId);
+    boolean existsByUserId(String userId);
 
-    Optional<User> findByEmail(String email);
+    boolean existsByEmail(String email);
 
     User findOneByUserId(String userId);
 
