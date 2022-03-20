@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MoneyRepository extends JpaRepository<User, Integer> {
 
-    User findByUserId(String userId);
+    User findOneByUserId(String userId);
 
 }
