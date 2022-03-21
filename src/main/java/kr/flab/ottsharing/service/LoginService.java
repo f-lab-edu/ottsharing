@@ -15,11 +15,13 @@ public class LoginService {
 
     private final UserRepository userRepository;
 
-    public User loginCheck(String loginId) {
+    // User Repository 구조 개편으로 코드 정상적으로 동작하지 않음
+    public User loginCheck(String loginId) {/*
         Optional<User> user = userRepository.findById(loginId);
         if(user.isPresent()){
             return user.get();
         }
+        */
 
         return null;
     }

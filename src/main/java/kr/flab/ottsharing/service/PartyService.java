@@ -22,12 +22,16 @@ public class PartyService {
     private final PartyMemberRepository memberRepo;
 
     public Party enrollParty(String leaderId,String getottId, String getottPassword){
+        // User Repository 구조 개편으로 코드 정상적으로 동작하지 않음
+        /*
 
         User teamleader = userRepo.getById(leaderId);
         Party party = Party.builder().leader(teamleader).ottId(getottId).ottPassword(getottPassword).build();
         Party enrolledParty = partyRepo.save(party);
 
         return enrolledParty;
+        */
+        return null;
     }
 
     public boolean makeFull(Party party){
@@ -44,9 +48,12 @@ public class PartyService {
     }
 
     public void getInParty(String userId, Party pickParty){
+        // User Repository 구조 개편으로 코드 정상적으로 동작하지 않음
+        /*
         User userToJoin = userRepo.getById(userId);
         PartyMember member = PartyMember.builder().user(userToJoin).party(pickParty).build();
         memberRepo.save(member);
+        */
     }
 
 }

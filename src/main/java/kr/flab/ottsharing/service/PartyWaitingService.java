@@ -37,10 +37,11 @@ public class PartyWaitingService {
     }
 
     public void putWaitingList(String waitmemberId){
-
+        // User Repository 변경으로 인해 코드 정상적으로 동작하지 않음
+        /*
         User waitmember = userRepo.getById(waitmemberId);
         PartyWaiting member = PartyWaiting.builder().user(waitmember).build();
         waitRepo.save(member);
-
+        */
     }
 }

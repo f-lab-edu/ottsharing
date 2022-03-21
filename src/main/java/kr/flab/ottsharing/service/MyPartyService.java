@@ -21,7 +21,10 @@ public class MyPartyService {
     @Autowired
     private PartyWaitingRepository waitRepo;
 
+
     public MyParty getMyParty(String userId) {
+        // User Repository 구조 변경으로 인해 코드 동작하지 않음
+        /*
         if (userId == null || userId.isEmpty()) {
             return new MyParty(MyParty.Status.NOT_LOGIN);
         }
@@ -38,5 +41,7 @@ public class MyPartyService {
         }
 
         return new MyParty(MyParty.Status.HAS_NO_PARTY);
+        */
+        return null;
     }
 }
