@@ -1,25 +1,15 @@
 package kr.flab.ottsharing.repository;
 
-import static org.junit.Assert.*;
-
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
-
-import kr.flab.ottsharing.entity.Party;
-import kr.flab.ottsharing.entity.PartyMember;
-import kr.flab.ottsharing.entity.User;
-
-import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @TestPropertySource("classpath:application-test.yml")
-public class PartyMemberTest {
+public class PartyMemberRepositoryTest {
 
     @Autowired
     private PartyMemberRepository memberRepo;
