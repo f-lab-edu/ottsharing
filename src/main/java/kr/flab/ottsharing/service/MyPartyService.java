@@ -21,9 +21,8 @@ public class MyPartyService {
     @Autowired
     private PartyWaitingRepository waitRepo;
 
-
+    // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     public MyParty getMyParty(String userId) {
-        // User Repository 구조 변경으로 인해 코드 동작하지 않음
         /*
         if (userId == null || userId.isEmpty()) {
             return new MyParty(MyParty.Status.NOT_LOGIN);

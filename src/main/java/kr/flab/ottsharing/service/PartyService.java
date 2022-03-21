@@ -21,16 +21,16 @@ public class PartyService {
     private final PartyRepository partyRepo;
     private final PartyMemberRepository memberRepo;
 
+    // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     public Party enrollParty(String leaderId,String getottId, String getottPassword){
         // User Repository 구조 개편으로 코드 정상적으로 동작하지 않음
         /*
 
-        User teamleader = userRepo.getById(leaderId);
+        /*User teamleader = userRepo.getById(leaderId);
         Party party = Party.builder().leader(teamleader).ottId(getottId).ottPassword(getottPassword).build();
         Party enrolledParty = partyRepo.save(party);
 
-        return enrolledParty;
-        */
+        return enrolledParty; */
         return null;
     }
 
@@ -42,18 +42,20 @@ public class PartyService {
         return true;
     }
 
+    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
     public List<Party> pickParty(){
+        /*
         List<Party> notFullParties = (List<Party>) partyRepo.findByIsFullFalse();
         return notFullParties;
+         */
+        return null;
     }
 
+    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
     public void getInParty(String userId, Party pickParty){
-        // User Repository 구조 개편으로 코드 정상적으로 동작하지 않음
-        /*
-        User userToJoin = userRepo.getById(userId);
+        /*User userToJoin = userRepo.getById(userId);
         PartyMember member = PartyMember.builder().user(userToJoin).party(pickParty).build();
-        memberRepo.save(member);
-        */
+        memberRepo.save(member);*/
     }
 
 }
