@@ -15,6 +15,7 @@ public class LoginService {
 
     private final UserRepository userRepository;
 
+
     // User Repository 구조 변경으로 인해 동작하지 않는 코드
     public User loginCheck(String loginId) {
         /*

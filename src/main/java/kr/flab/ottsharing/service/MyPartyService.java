@@ -40,7 +40,6 @@ public class MyPartyService {
         }
 
         return new MyParty(MyParty.Status.HAS_NO_PARTY);
-
         */
         return null;
     }

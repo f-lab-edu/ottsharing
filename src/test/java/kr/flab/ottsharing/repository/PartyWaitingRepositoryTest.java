@@ -25,24 +25,36 @@ public class PartyWaitingRepositoryTest {
     private UserRepository userRepo;
 
     @Test
-    void 대기자_등록_삭제_테스트() {
+    void save_테스트() {
         // given
         final User user = User.builder().userId("user").build();
         final User savedUser = userRepo.save(user);
 
         // when
         final PartyWaiting wait = PartyWaiting.builder().user(savedUser).build();
-        final PartyWaiting savedWait = waitRepo.save(wait);
 
         // then
+        final PartyWaiting savedWait = waitRepo.save(wait);
         assertEquals(waitRepo.findById(savedWait.getWaitingId()).get(), savedWait);
+    }
 
-        waitRepo.deleteById(savedWait.getWaitingId());
+    @Test
+    void deleteByUser_테스트() {
+        // given
+        final User user = User.builder().userId("user").build();
+        final User savedUser = userRepo.save(user);
+
+        // when
+        final PartyWaiting wait = PartyWaiting.builder().user(savedUser).build();
+        waitRepo.save(wait);
+
+        // then
+        waitRepo.deleteByUser(user);
         assertEquals(waitRepo.count(), 0);
     }
 
     @Test
-    void 가장_오래된_대기자_세명_가져오기_테스트() {
+    void findTop3ByOrderByCreatedTimeAsc_테스트() {
         // given
         User[] users = new User[5];
         PartyWaiting[] waits = new PartyWaiting[5];
@@ -66,5 +78,36 @@ public class PartyWaitingRepositoryTest {
             assertEquals(String.valueOf(userNumber), top3Wait.getUser().getUserId());
             userNumber++;
         }
+    }
+
+    @Test
+    void existsByUser_테스트() {
+        // given
+        final User user1 = User.builder().userId("user1").build();
+        final User savedUser1 = userRepo.save(user1);
+
+        final PartyWaiting wait = PartyWaiting.builder().user(savedUser1).build();
+        waitRepo.save(wait);
+
+        final User user2 = User.builder().userId("user2").build();
+        final User savedUser2 = userRepo.save(user2);
+
+
+        // then
+        assertEquals(true, waitRepo.existsByUser(savedUser1));
+        assertEquals(false, waitRepo.existsByUser(savedUser2));
+    }
+
+    @Test
+    void existsBy_테스트() {
+        assertEquals(false, waitRepo.existsBy());
+
+        final User user = User.builder().userId("user").build();
+        final User savedUser = userRepo.save(user);
+
+        final PartyWaiting wait = PartyWaiting.builder().user(savedUser).build();
+        waitRepo.save(wait);
+
+        assertEquals(true, waitRepo.existsBy());
     }
 }

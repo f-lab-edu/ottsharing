@@ -23,6 +23,8 @@ public class PartyService {
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     public Party enrollParty(String leaderId,String getottId, String getottPassword){
+        // User Repository 구조 개편으로 코드 정상적으로 동작하지 않음
+        /*
 
         /*User teamleader = userRepo.getById(leaderId);
         Party party = Party.builder().leader(teamleader).ottId(getottId).ottPassword(getottPassword).build();
