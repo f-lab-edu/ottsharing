@@ -1,11 +1,11 @@
 package kr.flab.ottsharing.entity;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
@@ -19,13 +19,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "partyMember")
+@Table(name = "party_member")
 public class PartyMember {
-
     @Id
-    @JoinColumn(name = "member_id")
+    @Column(name = "party_member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer memberId;
+    private Integer partyMemberId;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -35,9 +34,19 @@ public class PartyMember {
     @JoinColumn(name = "party_id")
     private Party party;
 
+    @Column(name = "nickname")
+    private String nickname;
+
+    @Column(name = "is_leader")
+    private boolean isLeader;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "created_timestamp")
     @CreationTimestamp
     private LocalDateTime createdTime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Column(name = "updated_timestamp")
+    @UpdateTimestamp
+    private LocalDateTime updatedTime;
 }
