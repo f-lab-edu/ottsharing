@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import kr.flab.ottsharing.protocol.RegisterResult;
 import kr.flab.ottsharing.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,10 +29,10 @@ public class UserServiceTest {
         String userId = "userId";
         String userPassword = "userPassword";
         String email = "email";
-        UserService.RegisterResult result = userService.register(userId, userPassword, email);
+        RegisterResult result = userService.register(userId, userPassword, email);
 
         // then
-        assertEquals(UserService.RegisterResult.SUCCESS, result);
+        assertEquals(RegisterResult.SUCCESS, result);
     }
 
     @Test
@@ -43,10 +44,10 @@ public class UserServiceTest {
         String userId = "userId";
         String userPassword = "userPassword";
         String email = "email";
-        UserService.RegisterResult result = userService.register(userId, userPassword, email);
+        RegisterResult result = userService.register(userId, userPassword, email);
 
         // then
-        assertEquals(UserService.RegisterResult.DUPLICATE_USER_ID, result);
+        assertEquals(RegisterResult.DUPLICATE_USER_ID, result);
     }
 
     @Test
@@ -58,9 +59,9 @@ public class UserServiceTest {
         String userId = "userId";
         String userPassword = "userPassword";
         String email = "email";
-        UserService.RegisterResult result = userService.register(userId, userPassword, email);
+        RegisterResult result = userService.register(userId, userPassword, email);
 
         // then
-        assertEquals(UserService.RegisterResult.DUPLICATE_EMAIL, result);
+        assertEquals(RegisterResult.DUPLICATE_EMAIL, result);
     }
 }
