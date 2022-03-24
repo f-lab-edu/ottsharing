@@ -17,30 +17,4 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService loginService;
-
-    @PostMapping("/login")
-    public String IdCheck(@RequestParam String userId,HttpServletResponse response){
-
-        User loginMember = loginService.loginCheck(userId);
-        if(loginMember == null){
-            loginMember = loginService.enrollUser(userId);
-        }
-
-        Cookie cookie = new Cookie("memberId",String.valueOf(loginMember.getUserId()));
-        response.addCookie(cookie);
-
-
-        return loginMember.getUserId();
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("memberId", null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
 }
