@@ -1,8 +1,5 @@
 package kr.flab.ottsharing.service;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.User;
@@ -11,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class LoginService {
+public class UserService {
 
     private final UserRepository userRepository;
 
