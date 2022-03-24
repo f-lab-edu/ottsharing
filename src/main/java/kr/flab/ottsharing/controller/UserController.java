@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.MyInfo;
+import kr.flab.ottsharing.protocol.UserDeleteResult;
+
 import kr.flab.ottsharing.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -47,6 +49,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @DeleteMapping("/myPage")
+    public UserDeleteResult leave() {
+        String userId = "user"; // 추후 JWT login 구현되면 현재 로그인 된 아이디 가져오도록 수정
+        return userService.deleteMyInfo(userId);
+    }
+      
     @GetMapping("/myPage")
     public MyInfo getMyInfo() {
         String userId = "user"; // 나중에 JWT login 구현되면 그에 맞게 자동으로 가져오도록 수정해야 함
