@@ -22,10 +22,6 @@ public class Party {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer partyId;
 
-    @OneToOne
-    @JoinColumn(name = "leader_id")
-    private User leader;
-
     @Column(name = "ott_id")
     private String ottId;
 
