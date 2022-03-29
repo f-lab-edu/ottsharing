@@ -1,35 +1,41 @@
 package kr.flab.ottsharing.service;
 
-import kr.flab.ottsharing.entity.Party;
-import kr.flab.ottsharing.entity.PartyMember;
-import kr.flab.ottsharing.entity.PartyWaiting;
-import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.repository.PartyMemberRepository;
-import kr.flab.ottsharing.repository.PartyRepository;
-import kr.flab.ottsharing.repository.PartyWaitingRepository;
-import kr.flab.ottsharing.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import kr.flab.ottsharing.entity.Party;
+import kr.flab.ottsharing.protocol.PartyInfo;
+import kr.flab.ottsharing.protocol.PartyMemberInfo;
+import kr.flab.ottsharing.repository.PartyRepository;
+import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
 public class PartyService {
-
-    private final UserRepository userRepo;
     private final PartyRepository partyRepo;
-    private final PartyMemberRepository memberRepo;
+    private final PartyMemberService memberService;
+
+    public PartyInfo fetchParty(Party party) {
+        List<PartyMemberInfo> memberInfos = memberService.getPartyMemberInfos(party);
+
+        return PartyInfo.builder()
+            .ottId(party.getOttId())
+            .ottPassword(party.getOttPassword())
+            .members(memberInfos)
+            .created(party.getCreatedTime())
+            .build();
+    }
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
-    public Party enrollParty(String leaderId,String getottId, String getottPassword){
+    public Party enrollParty(String leaderId, String getottId, String getottPassword) {
         // User Repository 구조 개편으로 코드 정상적으로 동작하지 않음
         /*
-
         /*User teamleader = userRepo.getById(leaderId);
         Party party = Party.builder().leader(teamleader).ottId(getottId).ottPassword(getottPassword).build();
         Party enrolledParty = partyRepo.save(party);
-
         return enrolledParty; */
         return null;
     }
