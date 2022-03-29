@@ -28,6 +28,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	testRuntimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.h2database:h2'
 }
 
 tasks.named('test') {
