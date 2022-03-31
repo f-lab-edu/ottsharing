@@ -1,6 +1,8 @@
 package kr.flab.ottsharing.controller;
 
 import kr.flab.ottsharing.entity.Party;
+import kr.flab.ottsharing.entity.User;
+import kr.flab.ottsharing.protocol.PartyCreateResult;
 import kr.flab.ottsharing.service.PartyService;
 import kr.flab.ottsharing.service.PartyWaitingService;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +18,9 @@ public class PartyController {
     private final PartyWaitingService waitingServ;
 
     @PostMapping("/party/create")
-    public void createParty(@RequestParam String leaderId, @RequestParam String ottId, @RequestParam String ottPassword) {
-
-        Party enrolledParty = partyServ.enrollParty(leaderId, ottId, ottPassword);
-
-        if (waitingServ.cheackWaitingPersonExist()) {
-            Integer membernumber = waitingServ.putPartyMember(enrolledParty);
-
-            if (membernumber == 3) {
-                partyServ.makeFull(enrolledParty);
-            }
-
-        }
+    public PartyCreateResult create(@RequestParam String ottId, @RequestParam String ottPassword) {
+        User user = null; // JWT 구현된 후 자동으로 유저 불러오도록 추후 수정
+        return partyServ.create(user, ottId, ottPassword);
     }
 
     @PostMapping("/party/join")
