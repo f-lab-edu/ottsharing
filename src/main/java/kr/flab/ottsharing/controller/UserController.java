@@ -12,7 +12,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     /* 추후 변경해야 할 코드 - 현재 구버전이므로 주석처리
     @PostMapping("/login")
