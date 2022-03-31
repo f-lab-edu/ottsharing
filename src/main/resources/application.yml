@@ -1,13 +1,15 @@
 spring:
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mysql://ott.cmew8sqracvu.ap-northeast-2.rds.amazonaws.com:3306/ott?serverTimezone=UTC&autoReconnect=true&allowMultiQueries=true&characterEncoding=UTF-8
-    username: ${DB_ID}
-    password: ${DB_PASSWORD}
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher # Spring boot 2.6버전 이후부터 발생하는 Swagger3.0.0 충돌 문제 해결하기 위한 설정
   jpa:
     hibernate:
+      dialect: org.hibernate.dialect.MariaDBDialect
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
