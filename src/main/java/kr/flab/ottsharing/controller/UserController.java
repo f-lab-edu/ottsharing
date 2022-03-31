@@ -23,13 +23,18 @@ public class UserController {
 
     private final UserService userService;
 
+    // Login 쪽 로직 개선으로 인해 동작하지 않는 코드
     @PostMapping("/login")
-    public String IdCheck(@RequestParam String userId,HttpServletResponse response){
-
+    public String IdCheck(@RequestParam String userId,HttpServletResponse response) {
+        /*
         User loginMember = userService.loginCheck(userId);
-        if(loginMember == null){
+        if (loginMember == null) {
             loginMember = userService.enrollUser(userId);
         }
+        return loginMember;
+        */
+        return null;
+    }
 
     @PutMapping("/myPage")
     public MyPageUpdateResult changeMyInfo(@RequestBody Map<String, String> request) {
