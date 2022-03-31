@@ -1,13 +1,7 @@
 package kr.flab.ottsharing.service;
 
 import kr.flab.ottsharing.entity.Party;
-import kr.flab.ottsharing.entity.PartyMember;
-import kr.flab.ottsharing.entity.PartyWaiting;
-import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
-import kr.flab.ottsharing.repository.PartyWaitingRepository;
-import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +10,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PartyService {
-
-    private final UserRepository userRepo;
     private final PartyRepository partyRepo;
-    private final PartyMemberRepository memberRepo;
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     public Party enrollParty(String leaderId,String getottId, String getottPassword){
@@ -57,5 +48,4 @@ public class PartyService {
         PartyMember member = PartyMember.builder().user(userToJoin).party(pickParty).build();
         memberRepo.save(member);*/
     }
-
 }
