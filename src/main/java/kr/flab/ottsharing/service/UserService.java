@@ -23,7 +23,7 @@ public class UserService {
     private final Pattern VALID_EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
     private final int PASSWORD_MIN_LENGTH = 8;
 
-    public RegisterResult register(String userId, String userPassword, String email){
+    public RegisterResult register(String userId, String userPassword, String email) {
         if (userRepository.existsByUserId(userId)) {
             return RegisterResult.DUPLICATE_USER_ID;
         }
@@ -41,6 +41,7 @@ public class UserService {
             .userId(userId)
             .userPassword(userPassword)
             .email(email)
+            .money(0l)
             .build();
 
         userRepository.save(user);
