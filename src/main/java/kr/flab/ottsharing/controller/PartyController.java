@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PartyController {
 
-    private final PartyService partyServ;
-    private final PartyWaitingService waitingServ;
+    private PartyService partyServ;
+    private PartyWaitingService waitingServ;
 
     @PostMapping("/party/create")
     public void createParty(@RequestParam String leaderId, @RequestParam String ottId, @RequestParam String ottPassword) {

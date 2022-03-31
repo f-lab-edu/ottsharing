@@ -2,7 +2,6 @@ package kr.flab.ottsharing.service;
 
 import kr.flab.ottsharing.protocol.MyPageUpdateResult;
 import org.springframework.stereotype.Service;
-
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.UserDeleteResult;
 import kr.flab.ottsharing.repository.PartyMemberRepository;

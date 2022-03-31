@@ -1,28 +1,20 @@
 package kr.flab.ottsharing.controller;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-
 import kr.flab.ottsharing.protocol.MyPageUpdateResult;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.MyInfo;
 import kr.flab.ottsharing.protocol.UserDeleteResult;
-
 import kr.flab.ottsharing.service.UserService;
 import lombok.RequiredArgsConstructor;
-
 import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private UserService userService;
 
+    /* 추후 변경해야 할 코드 - 현재 구버전이므로 주석처리
     @PostMapping("/login")
     public String IdCheck(@RequestParam String userId,HttpServletResponse response){
 
@@ -30,6 +22,7 @@ public class UserController {
         if(loginMember == null){
             loginMember = userService.enrollUser(userId);
         }
+    }*/ 
 
     @PutMapping("/myPage")
     public MyPageUpdateResult changeMyInfo(@RequestBody Map<String, String> request) {
@@ -39,7 +32,8 @@ public class UserController {
 
         return userService.updateMyInfo(userId, password, email);
     }
-
+    
+    /* 추후 변경해야 할 코드 - 현재 구버전이므로 주석처리
     @PostMapping("/logout")
     public ResponseEntity logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("memberId", null);
@@ -48,6 +42,7 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+    */
 
     @DeleteMapping("/myPage")
     public UserDeleteResult leave() {
