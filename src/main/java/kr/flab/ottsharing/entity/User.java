@@ -1,6 +1,8 @@
 package kr.flab.ottsharing.entity;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+
 import javax.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Builder
@@ -17,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Table(name = "user")
 @Getter
+@Setter
 public class User {
 
     @Id
@@ -42,6 +46,13 @@ public class User {
     @Column(name = "updated_timestamp")
     @UpdateTimestamp
     private LocalDateTime updatedTime;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_authority",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
+    private Set<Authority> authorities;
 
  
 }

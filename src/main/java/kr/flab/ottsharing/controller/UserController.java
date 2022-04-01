@@ -1,15 +1,22 @@
 package kr.flab.ottsharing.controller;
 
 import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import kr.flab.ottsharing.protocol.LoginRequest;
 import kr.flab.ottsharing.protocol.MyInfo;
 import kr.flab.ottsharing.protocol.MyPageUpdateResult;
 import kr.flab.ottsharing.protocol.RegisterResult;
+import kr.flab.ottsharing.protocol.TokenProtocol;
+import kr.flab.ottsharing.protocol.TokenRequest;
+import kr.flab.ottsharing.service.AuthService;
 import kr.flab.ottsharing.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final AuthService authService;
 
 
     @PostMapping("/register")
@@ -42,6 +50,16 @@ public class UserController {
         String email = request.get("email");
 
         return userService.updateMyInfo(userId, password, email);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenProtocol> authorize(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(authService.login(loginRequest));
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<TokenProtocol> reissue(@RequestBody TokenRequest tokenRequest) {
+        return ResponseEntity.ok(authService.reissue(tokenRequest));
     }
 
 }
