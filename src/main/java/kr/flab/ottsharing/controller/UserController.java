@@ -1,8 +1,6 @@
 package kr.flab.ottsharing.controller;
 
 import java.util.Map;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.flab.ottsharing.protocol.MyInfo;
 import kr.flab.ottsharing.protocol.MyPageUpdateResult;
 import kr.flab.ottsharing.protocol.RegisterResult;
-import kr.flab.ottsharing.protocol.UserDeleteResult;
 import kr.flab.ottsharing.service.UserService;
 import lombok.RequiredArgsConstructor;
 

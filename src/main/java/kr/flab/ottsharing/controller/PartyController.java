@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
 import kr.flab.ottsharing.service.PartyService;
