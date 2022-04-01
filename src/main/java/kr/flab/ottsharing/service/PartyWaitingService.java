@@ -1,12 +1,7 @@
 package kr.flab.ottsharing.service;
 
 import kr.flab.ottsharing.entity.Party;
-import kr.flab.ottsharing.entity.PartyMember;
-import kr.flab.ottsharing.entity.PartyWaiting;
-import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
-import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +9,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PartyWaitingService {
 
-    private final PartyWaitingRepository waitRepo;
-    private final PartyMemberRepository memberRepo;
-    private final UserRepository userRepo;
+    private  final PartyWaitingRepository waitRepo;
 
     public boolean cheackWaitingPersonExist(){
         return waitRepo.existsBy();
     }
 
+    //추후 변경해야 할 코드
     public Integer putPartyMember(Party enrolledparty){
-
+        /*
         Iterable<PartyWaiting> top3Waits = waitRepo.findTop3ByOrderByCreatedTimeAsc();
         int memberNumber = 0;
         for (PartyWaiting top3Wait : top3Waits) {
@@ -34,6 +28,8 @@ public class PartyWaitingService {
         }
 
         return memberNumber;
+        */
+        return 0;
     }
 
     // User Repository 구조 변경으로 인해 동작하지 않는 코드

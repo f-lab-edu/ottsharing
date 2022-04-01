@@ -1,25 +1,11 @@
 package kr.flab.ottsharing.service;
-
-import kr.flab.ottsharing.entity.Party;
-import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.repository.PartyMemberRepository;
-import kr.flab.ottsharing.repository.PartyWaitingRepository;
-import kr.flab.ottsharing.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import kr.flab.ottsharing.protocol.MyParty;
 
-import java.util.Optional;
 
 @Service
 public class MyPartyService {
-    @Autowired
-    private PartyMemberRepository memberRepo;
-    @Autowired
-    private UserRepository userRepo;
-    @Autowired
-    private PartyWaitingRepository waitRepo;
+  
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     public MyParty getMyParty(String userId) {

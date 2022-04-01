@@ -1,19 +1,14 @@
 package kr.flab.ottsharing.entity;
 
 import java.time.LocalDateTime;
-
 import javax.persistence.*;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 
 @Entity
 @Builder
@@ -21,6 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Table(name = "user")
+@Getter
 public class User {
 
     @Id
@@ -46,4 +42,6 @@ public class User {
     @Column(name = "updated_timestamp")
     @UpdateTimestamp
     private LocalDateTime updatedTime;
+
+ 
 }

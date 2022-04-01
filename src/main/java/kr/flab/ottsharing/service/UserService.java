@@ -1,7 +1,7 @@
 package kr.flab.ottsharing.service;
 
-import java.util.regex.Pattern;
 
+import java.util.regex.Pattern;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.MyPageUpdateResult;
 import kr.flab.ottsharing.protocol.RegisterResult;
