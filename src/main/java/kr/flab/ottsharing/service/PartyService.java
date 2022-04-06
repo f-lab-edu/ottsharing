@@ -45,7 +45,7 @@ public class PartyService {
     }
 
     @Transactional
-    public void deleteParty(String userId, Integer partyId) {
+    public String deleteParty(String userId, Integer partyId) {
 
         Optional<User> user = userRepo.findByUserId(userId);
 
@@ -60,7 +60,7 @@ public class PartyService {
                     memberRepo.deleteAllByParty(party);
 
                     partyRepo.deleteById(partyId);
-
+                    return "삭제 완료되었습니다";
                 } else {
                     throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
                 }

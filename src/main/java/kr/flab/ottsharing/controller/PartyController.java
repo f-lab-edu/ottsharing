@@ -36,7 +36,7 @@ public class PartyController {
     }
 
     @DeleteMapping("/party/deleteParty")
-    public void deleteParty(@RequestParam String userId, @RequestParam Integer partyId) {
-        partyServ.deleteParty(userId, partyId);
+    public String deleteParty(@RequestParam String userId, @RequestParam Integer partyId) {
+        return partyServ.deleteParty(userId, partyId);
     }
 }
