@@ -24,6 +24,7 @@ public class PartyService {
     private final PartyRepository partyRepo;
     private final PartyMemberRepository memberRepo;
     private final UserRepository userRepo;
+    private final PartyMemberService memberService;
 
     public PartyCreateResult create(User leader, String ottId, String ottPassword) {
         Party party = Party.builder()
@@ -45,20 +46,19 @@ public class PartyService {
 
     @Transactional
     public void deleteParty(String userId, Integer partyId) {
-        //파티 id를 통해 해당 파티의 지도자 id를 가져온다 userId와 동일한 지 확인한다.
-        Optional<User> user = userRepo.findByUserId(userId);
 
+        Optional<User> user = userRepo.findByUserId(userId);
+        System.out.println(user);
         if(user.isPresent()) {
             User presentUser = user.get();
-            PartyMember member = memberRepo.findOneByUser(presentUser).get();
-            Party party = member.getParty();
-
-            if (member.isLeader()) {
+         
+            if (memberService.checkLeader(presentUser)) {
+                Party party = memberService.PartyOfLeader();
 
                 if (party.getPartyId().equals(partyId)) {
-                    //해당 그룹 멤버레버지토리에서 먼저 삭제
+           
                     memberRepo.deleteAllByParty(party);
-                    // 해당 파티 삭제
+       
                     partyRepo.deleteById(partyId);
 
                 } else {
