@@ -15,4 +15,6 @@ public interface PartyMemberRepository extends JpaRepository<PartyMember,Integer
     Optional<PartyMember> findOneByUser(User user);
 
     List<PartyMember> findByParty(Party party);
+
+    void deleteAllByParty(Party party);
 }

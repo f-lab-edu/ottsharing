@@ -16,4 +16,6 @@ public interface PartyRepository extends JpaRepository<Party,Integer> {
 
     @Query(value = "select p from Party p where p.isFull = false order by p.createdTime asc")
     List<Party> findNotFullOldestParties();
+
+    void deleteById(Integer partyId);
 }

@@ -1,12 +1,18 @@
 package kr.flab.ottsharing.service;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
+import kr.flab.ottsharing.repository.UserRepository;
 import kr.flab.ottsharing.entity.User;
+import kr.flab.ottsharing.exception.WrongInfoException;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +23,7 @@ public class PartyService {
 
     private final PartyRepository partyRepo;
     private final PartyMemberRepository memberRepo;
+    private final UserRepository userRepo;
 
     public PartyCreateResult create(User leader, String ottId, String ottPassword) {
         Party party = Party.builder()
@@ -34,6 +41,35 @@ public class PartyService {
         memberRepo.save(member);
 
         return PartyCreateResult.SUCCESS;
+    }
+
+    @Transactional
+    public void deleteParty(String userId, Integer partyId) {
+        //파티 id를 통해 해당 파티의 지도자 id를 가져온다 userId와 동일한 지 확인한다.
+        Optional<User> user = userRepo.findByUserId(userId);
+
+        if(user.isPresent()) {
+            User presentUser = user.get();
+            PartyMember member = memberRepo.findOneByUser(presentUser).get();
+            Party party = member.getParty();
+
+            if (member.isLeader()) {
+
+                if (party.getPartyId().equals(partyId)) {
+                    //해당 그룹 멤버레버지토리에서 먼저 삭제
+                    memberRepo.deleteAllByParty(party);
+                    // 해당 파티 삭제
+                    partyRepo.deleteById(partyId);
+
+                } else {
+                    throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
+                }
+            } else {
+                throw new WrongInfoException("삭제 권한이 없습니다" + userId );
+            }
+        } else {
+            throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
+        }
     }
 
 
