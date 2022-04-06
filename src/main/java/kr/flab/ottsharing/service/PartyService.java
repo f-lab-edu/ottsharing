@@ -48,17 +48,17 @@ public class PartyService {
     public void deleteParty(String userId, Integer partyId) {
 
         Optional<User> user = userRepo.findByUserId(userId);
-        System.out.println(user);
+
         if(user.isPresent()) {
             User presentUser = user.get();
-         
+
             if (memberService.checkLeader(presentUser)) {
                 Party party = memberService.PartyOfLeader();
 
                 if (party.getPartyId().equals(partyId)) {
-           
+
                     memberRepo.deleteAllByParty(party);
-       
+
                     partyRepo.deleteById(partyId);
 
                 } else {
@@ -71,6 +71,7 @@ public class PartyService {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
         }
     }
+
 
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
