@@ -24,7 +24,7 @@ public class PartyService {
     private final PartyRepository partyRepo;
     private final PartyMemberRepository memberRepo;
     private final UserRepository userRepo;
-    private final PartyMemberService memberService;
+    private final LeaderMemberService leadermemberService;
 
     public PartyCreateResult create(User leader, String ottId, String ottPassword) {
         Party party = Party.builder()
@@ -52,8 +52,8 @@ public class PartyService {
         if(user.isPresent()) {
             User presentUser = user.get();
 
-            if (memberService.checkLeader(presentUser)) {
-                Party party = memberService.PartyOfLeader();
+            if (leadermemberService.checkLeader(presentUser)) {
+                Party party = leadermemberService.PartyOfLeader();
 
                 if (party.getPartyId().equals(partyId)) {
 
@@ -71,6 +71,8 @@ public class PartyService {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
         }
     }
+
+
 
 
 

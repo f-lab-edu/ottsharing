@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class PartyMemberService {
+public class LeaderMemberService {
 
     private final PartyMemberRepository memberRepo;
     private PartyMember member;
@@ -23,5 +23,6 @@ public class PartyMemberService {
     public Party PartyOfLeader(){
         return member.getParty();
     }
+    
     
 }
