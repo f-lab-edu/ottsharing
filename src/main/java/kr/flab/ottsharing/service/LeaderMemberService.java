@@ -20,7 +20,7 @@ public class LeaderMemberService {
         return member.isLeader();
     }
 
-    public Party PartyOfLeader(){
+    public Party getPartyOfLeader(){
         return member.getParty();
     }
     

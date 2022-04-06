@@ -48,29 +48,28 @@ public class PartyService {
     public String deleteParty(String userId, Integer partyId) {
 
         Optional<User> user = userRepo.findByUserId(userId);
-
-        if(user.isPresent()) {
-            User presentUser = user.get();
-
-            if (leadermemberService.checkLeader(presentUser)) {
-                Party party = leadermemberService.PartyOfLeader();
-
-                if (party.getPartyId().equals(partyId)) {
-
-                    memberRepo.deleteAllByParty(party);
-
-                    partyRepo.deleteById(partyId);
-                    return "삭제 완료되었습니다";
-                } else {
-                    throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
-                }
-            } else {
-                throw new WrongInfoException("삭제 권한이 없습니다" + userId );
-            }
-        } else {
+         
+        if(!user.isPresent()) {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
         }
+        User presentUser = user.get();
+        
+        if(!leadermemberService.checkLeader(presentUser)) {
+            throw new WrongInfoException("삭제 권한이 없습니다" + userId );
+        }
+       
+        Party party = leadermemberService.getPartyOfLeader();
+
+        if(!party.getPartyId().equals(partyId)) {
+            throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
+        }
+
+        memberRepo.deleteAllByParty(party);
+        partyRepo.deleteById(partyId);
+
+        return "삭제 완료되었습니다";
     }
+
 
 
 
