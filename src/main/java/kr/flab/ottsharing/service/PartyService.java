@@ -6,16 +6,16 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
+
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
-import kr.flab.ottsharing.repository.PartyMemberRepository;
-import kr.flab.ottsharing.repository.PartyRepository;
-import kr.flab.ottsharing.repository.UserRepository;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.WrongInfoException;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
+import kr.flab.ottsharing.repository.PartyMemberRepository;
+import kr.flab.ottsharing.repository.PartyRepository;
+import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class PartyService {
     private final PartyRepository partyRepo;
     private final PartyMemberRepository memberRepo;
     private final UserRepository userRepo;
-    private final LeaderMemberService leadermemberService;
+    private final PartyMemberService leadermemberService;
 
     public PartyCreateResult create(User leader, String ottId, String ottPassword) {
         Party party = Party.builder()
@@ -48,19 +48,16 @@ public class PartyService {
     public String deleteParty(String userId, Integer partyId) {
 
         Optional<User> user = userRepo.findByUserId(userId);
-         
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
         }
         User presentUser = user.get();
-        
-        if(!leadermemberService.checkLeader(presentUser)) {
+        if (!leadermemberService.checkLeader(presentUser)) {
             throw new WrongInfoException("삭제 권한이 없습니다" + userId );
         }
-       
         Party party = leadermemberService.getPartyOfLeader();
 
-        if(!party.getPartyId().equals(partyId)) {
+        if (!party.getPartyId().equals(partyId)) {
             throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
         }
 
