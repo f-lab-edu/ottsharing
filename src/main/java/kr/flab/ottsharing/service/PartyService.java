@@ -32,7 +32,6 @@ public class PartyService {
             .ottPassword(ottPassword)
             .build();
         partyRepo.save(party);
-        
         PartyMember member = PartyMember.builder()
             .user(leader)
             .isLeader(true)

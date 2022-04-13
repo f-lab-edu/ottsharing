@@ -15,12 +15,12 @@ public class PartyMemberService {
     private final PartyMemberRepository memberRepo;
     private PartyMember member;
 
-    public Boolean checkLeader(User user){
+    public Boolean checkLeader(User user) {
         member = memberRepo.findOneByUser(user).get();
         return member.isLeader();
     }
 
-    public Party getPartyOfLeader(){
+    public Party getPartyOfLeader() {
         return member.getParty();
     }
 }
