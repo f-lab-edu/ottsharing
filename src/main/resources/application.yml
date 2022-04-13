@@ -7,6 +7,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher # Spring boot 2.6버전 이후부터 발생하는 Swagger3.0.0 충돌 문제 해결하기 위한 설정
+    hiddenmethod:
+      filter:
+        enabled: true
   jpa:
     hibernate:
       dialect: org.hibernate.dialect.MariaDBDialect

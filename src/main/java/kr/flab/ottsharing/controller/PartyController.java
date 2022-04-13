@@ -1,5 +1,6 @@
 package kr.flab.ottsharing.controller;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,5 +33,10 @@ public class PartyController {
             waitingServ.putWaitingList(userId);
             return "파티 참여 대기중입니다";
         }
+    }
+
+    @DeleteMapping("/party/deleteParty")
+    public String deleteParty(@RequestParam String userId, @RequestParam Integer partyId) {
+        return partyServ.deleteParty(userId, partyId);
     }
 }
