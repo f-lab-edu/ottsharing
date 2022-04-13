@@ -16,5 +16,6 @@ public class PartyMemberService {
 
     public Party getPartyOfLeader(PartyMember partymember) {
         return partymember.getParty();
+
     }
 }
