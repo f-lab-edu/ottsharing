@@ -24,6 +24,7 @@ public class PartyService {
     private final PartyRepository partyRepo;
     private final PartyMemberRepository memberRepo;
     private final UserRepository userRepo;
+    private final PartyMemberService partymemberService;
 
     public PartyCreateResult create(User leader, String ottId, String ottPassword) {
         Party party = Party.builder()
@@ -44,34 +45,30 @@ public class PartyService {
     }
 
     @Transactional
-    public void deleteParty(String userId, Integer partyId) {
-        //파티 id를 통해 해당 파티의 지도자 id를 가져온다 userId와 동일한 지 확인한다.
+    public String deleteParty(String userId, Integer partyId) {
+
         Optional<User> user = userRepo.findByUserId(userId);
-
-        if(user.isPresent()) {
-            User presentUser = user.get();
-            PartyMember member = memberRepo.findOneByUser(presentUser).get();
-            Party party = member.getParty();
-
-            if (member.isLeader()) {
-
-                if (party.getPartyId().equals(partyId)) {
-                    //해당 그룹 멤버레버지토리에서 먼저 삭제
-                    memberRepo.deleteAllByParty(party);
-                    // 해당 파티 삭제
-                    partyRepo.deleteById(partyId);
-
-                } else {
-                    throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
-                }
-            } else {
-                throw new WrongInfoException("삭제 권한이 없습니다" + userId );
-            }
-        } else {
+        if (!user.isPresent()) {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
         }
-    }
+        User presentUser = user.get();
+        PartyMember partymember = memberRepo.findOneByUser(presentUser).get();
 
+        if (!partymemberService.checkLeader(partymember)) {
+            throw new WrongInfoException("삭제 권한이 없습니다" + userId );
+        }
+
+        Party party = partymemberService.getPartyOfLeader(partymember);
+
+        if (!party.getPartyId().equals(partyId)) {
+            throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
+        }
+
+        memberRepo.deleteAllByParty(party);
+        partyRepo.deleteById(partyId);
+
+        return "삭제 완료되었습니다";
+    }
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     public Party enrollParty(String leaderId, String getottId, String getottPassword) {
