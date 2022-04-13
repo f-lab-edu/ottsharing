@@ -4,23 +4,18 @@ import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
-import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.repository.PartyMemberRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class PartyMemberService {
 
-    private final PartyMemberRepository memberRepo;
-    private PartyMember member;
-
-    public Boolean checkLeader(User user) {
-        member = memberRepo.findOneByUser(user).get();
-        return member.isLeader();
+    public Boolean checkLeader(PartyMember partymember) {
+        return partymember.isLeader();
     }
 
-    public Party getPartyOfLeader() {
-        return member.getParty();
+    public Party getPartyOfLeader(PartyMember partymember) {
+        return partymember.getParty();
+
     }
 }

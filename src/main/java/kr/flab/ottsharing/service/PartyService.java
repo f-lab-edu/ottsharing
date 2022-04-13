@@ -24,7 +24,7 @@ public class PartyService {
     private final PartyRepository partyRepo;
     private final PartyMemberRepository memberRepo;
     private final UserRepository userRepo;
-    private final PartyMemberService leadermemberService;
+    private final PartyMemberService partymemberService;
 
     public PartyCreateResult create(User leader, String ottId, String ottPassword) {
         Party party = Party.builder()
@@ -51,10 +51,13 @@ public class PartyService {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
         }
         User presentUser = user.get();
-        if (!leadermemberService.checkLeader(presentUser)) {
+        PartyMember partymember = memberRepo.findOneByUser(presentUser).get();
+
+        if (!partymemberService.checkLeader(partymember)) {
             throw new WrongInfoException("삭제 권한이 없습니다" + userId );
         }
-        Party party = leadermemberService.getPartyOfLeader();
+
+        Party party = partymemberService.getPartyOfLeader(partymember);
 
         if (!party.getPartyId().equals(partyId)) {
             throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
@@ -65,11 +68,6 @@ public class PartyService {
 
         return "삭제 완료되었습니다";
     }
-
-
-
-
-
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     public Party enrollParty(String leaderId, String getottId, String getottPassword) {
