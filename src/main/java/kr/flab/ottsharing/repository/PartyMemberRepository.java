@@ -11,7 +11,7 @@ import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
 
 @Repository
-public interface PartyMemberRepository extends JpaRepository<PartyMember,Integer> {
+public interface PartyMemberRepository extends JpaRepository<PartyMember, Integer> {
     Optional<PartyMember> findOneByUser(User user);
 
     List<PartyMember> findByParty(Party party);

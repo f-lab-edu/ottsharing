@@ -1,17 +1,16 @@
 package kr.flab.ottsharing.service;
 
-
 import java.util.regex.Pattern;
+
+import org.springframework.stereotype.Service;
+
 import kr.flab.ottsharing.entity.User;
+import kr.flab.ottsharing.protocol.MyInfo;
 import kr.flab.ottsharing.protocol.MyPageUpdateResult;
 import kr.flab.ottsharing.protocol.RegisterResult;
 import kr.flab.ottsharing.protocol.UserDeleteResult;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
-import kr.flab.ottsharing.protocol.MyInfo;
 import kr.flab.ottsharing.repository.UserRepository;
-
-import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -41,7 +40,7 @@ public class UserService {
             .userId(userId)
             .userPassword(userPassword)
             .email(email)
-            .money(0l)
+            .money(0L)
             .build();
 
         userRepository.save(user);
@@ -90,7 +89,7 @@ public class UserService {
     }
 
     // User Entity 구조 변경으로 인해 동작하지 않는 코드
-    public User enrollUser(String loginId){
+    public User enrollUser(String loginId) {
         /*
         User user = User.builder()
             .userId(loginId)
@@ -133,13 +132,13 @@ public class UserService {
         boolean isPasswordChange = false;
         boolean isEmailChange = false;
 
-        if(!passwordBeforeChange.equals(changedPassword)) {
+        if (!passwordBeforeChange.equals(changedPassword)) {
             user.setUserPassword(changedPassword);
             userRepository.save(user);
             isPasswordChange = true;
         }
 
-        if(!emailBeforeChange.equals(changedEmail)) {
+        if (!emailBeforeChange.equals(changedEmail)) {
             boolean exist = userRepository.existsByEmail(changedEmail);
             if (!exist) {
                 user.setEmail(changedEmail);
@@ -151,11 +150,11 @@ public class UserService {
         }
 
         MyPageUpdateResult result = MyPageUpdateResult.NOTHING_CHANGED;
-        if(emailProblem) {
+        if (emailProblem) {
             user.setUserPassword(passwordBeforeChange);
             userRepository.save(user);
             result = MyPageUpdateResult.DUPLICATED_EMAIL;
-        } else if(isPasswordChange || isEmailChange) {
+        } else if (isPasswordChange || isEmailChange) {
             result = MyPageUpdateResult.CHANGE_COMPLETE;
         }
         return result;

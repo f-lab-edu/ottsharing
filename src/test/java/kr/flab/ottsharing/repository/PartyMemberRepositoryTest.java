@@ -27,7 +27,7 @@ public class PartyMemberRepositoryTest {
     private PartyRepository partyRepo;
 
     @Test
-    void User로_PartyMember_행_찾기_테스트(){
+    void User로_PartyMember_행_찾기_테스트() {
         //given
         final User user1 = User.builder().userId("유저1").build();
         final User savedUser1 = userRepo.save(user1);
@@ -40,7 +40,8 @@ public class PartyMemberRepositoryTest {
         final Party savedParty = partyRepo.save(party);
 
         //when
-        final PartyMember partyMember1 = PartyMember.builder().user(savedUser1).isLeader(true).party(savedParty).build();
+        final PartyMember partyMember1 = PartyMember.builder().user(savedUser1)
+            .isLeader(true).party(savedParty).build();
         memberRepo.save(partyMember1);
         final PartyMember partyMember2 = PartyMember.builder().user(savedUser2).party(savedParty).build();
         memberRepo.save(partyMember2);
@@ -65,7 +66,8 @@ public class PartyMemberRepositoryTest {
         final Party savedParty = partyRepo.save(party);
 
         //when
-        final PartyMember partyMember1 = PartyMember.builder().user(savedUser1).isLeader(true).party(savedParty).build();
+        final PartyMember partyMember1 = PartyMember.builder().user(savedUser1)
+            .isLeader(true).party(savedParty).build();
         memberRepo.save(partyMember1);
         final PartyMember partyMember2 = PartyMember.builder().user(savedUser2).party(savedParty).build();
         memberRepo.save(partyMember2);

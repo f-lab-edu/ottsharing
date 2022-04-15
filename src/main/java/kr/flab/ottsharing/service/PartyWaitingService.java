@@ -1,9 +1,10 @@
 package kr.flab.ottsharing.service;
 
+import org.springframework.stereotype.Service;
+
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -11,12 +12,12 @@ public class PartyWaitingService {
 
     private  final PartyWaitingRepository waitRepo;
 
-    public boolean cheackWaitingPersonExist(){
+    public boolean cheackWaitingPersonExist() {
         return waitRepo.existsBy();
     }
 
     //추후 변경해야 할 코드
-    public Integer putPartyMember(Party enrolledparty){
+    public Integer putPartyMember(Party enrolledparty) {
         /*
         Iterable<PartyWaiting> top3Waits = waitRepo.findTop3ByOrderByCreatedTimeAsc();
         int memberNumber = 0;
