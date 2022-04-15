@@ -1,4 +1,4 @@
-package kr.flag.ottsharing.exception;
+package kr.flab.ottsharing.exception;
 
 public class WrongInfoException extends RuntimeException{
 

@@ -11,7 +11,7 @@ import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
 import kr.flab.ottsharing.repository.UserRepository;
-import kr.flag.ottsharing.exception.WrongInfoException;
+import kr.flab.ottsharing.exception.WrongInfoException;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
 import lombok.RequiredArgsConstructor;
