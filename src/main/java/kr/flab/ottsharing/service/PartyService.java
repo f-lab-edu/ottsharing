@@ -58,7 +58,7 @@ public class PartyService {
             throw new WrongInfoException("삭제 권한이 없습니다" + userId );
         }
 
-        Party party = partymemberService.getPartyOfLeader(partymember);
+        Party party = partymemberService.getParty(partymember);
 
         if (!party.getPartyId().equals(partyId)) {
             throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
@@ -68,6 +68,29 @@ public class PartyService {
         partyRepo.deleteById(partyId);
 
         return "삭제 완료되었습니다";
+    }
+
+    public String getOutParty(String userId, Integer partyId) {
+        Optional<User> user = userRepo.findByUserId(userId);
+        if (!user.isPresent()) {
+            throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
+        }
+        User presentUser = user.get();
+        PartyMember partymember = memberRepo.findOneByUser(presentUser).get();
+
+        if (partymemberService.checkLeader(partymember)) {
+            throw new WrongInfoException("리더인 경우, 탈퇴가 아닌 파티해체 절차로 가주세요" + userId );
+        }
+
+        Party party = partymemberService.getParty(partymember);
+
+        if (!party.getPartyId().equals(partyId)) {
+            throw new WrongInfoException("탈퇴 권한의 그룹이 아닙니다" + partyId );
+        }
+
+        memberRepo.deleteById(partymember.getPartyMemberId());
+
+        return "파티 탈퇴 완료되었습니다";
     }
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
