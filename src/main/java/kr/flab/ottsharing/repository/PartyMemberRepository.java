@@ -17,4 +17,6 @@ public interface PartyMemberRepository extends JpaRepository<PartyMember, Intege
     List<PartyMember> findByParty(Party party);
 
     void deleteAllByParty(Party party);
+
+    void deleteById(Integer partyMemberId);
 }

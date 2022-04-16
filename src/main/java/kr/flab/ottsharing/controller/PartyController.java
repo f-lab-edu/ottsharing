@@ -39,4 +39,9 @@ public class PartyController {
     public String deleteParty(@RequestParam String userId, @RequestParam Integer partyId) {
         return partyServ.deleteParty(userId, partyId);
     }
+
+    @DeleteMapping("/party/getOutParty")
+    public String getOutParty(@RequestParam String userId, @RequestParam Integer partyId) {
+        return partyServ.getOutParty(userId, partyId);
+    }
 }
