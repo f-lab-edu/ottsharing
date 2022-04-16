@@ -3,6 +3,8 @@ package kr.flab.ottsharing.service;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.Party;
+import kr.flab.ottsharing.entity.User;
+import kr.flab.ottsharing.protocol.DeleteWaitingResult;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +16,11 @@ public class PartyWaitingService {
 
     public boolean cheackWaitingPersonExist() {
         return waitRepo.existsBy();
+    }
+
+    public DeleteWaitingResult deleteWaiting(User user) {
+        waitRepo.deleteByUser(user);
+        return DeleteWaitingResult.SUCCESS;
     }
 
     //추후 변경해야 할 코드
