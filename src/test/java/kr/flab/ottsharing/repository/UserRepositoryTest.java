@@ -16,39 +16,35 @@ import kr.flab.ottsharing.entity.User;
 @DataJpaTest
 @TestPropertySource("classpath:application-test.yml")
 public class UserRepositoryTest {
-
     @Autowired
     private UserRepository userRepository;
 
     User user1;
 
     @BeforeEach
-    public void before(){
+    public void before() {
         user1 = User.builder()
                 .userId("유저1")
                 .userPassword("1234")
                 .email("email1")
-                .money(0l)
+                .money(0L)
                 .build();
 
         userRepository.save(user1);
     }
-    @Test
-    void 가입_테스트(){
 
+    @Test
+    void 가입_테스트() {
         User result = userRepository.findByUserId(user1.getUserId()).get();
         assertEquals("유저1", result.getUserId());
         assertEquals("1234", result.getUserPassword());
         assertEquals("email1", result.getEmail());
-
-   }
+    }
 
     @Test
     void 탈퇴_테스트() {
-
         userRepository.deleteById(user1.getId());
         boolean result = userRepository.existsByUserId(user1.getUserId());
         assertEquals(false, result);
-
     }
 }

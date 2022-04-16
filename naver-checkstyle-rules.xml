@@ -421,4 +421,7 @@ The following rules in the Naver coding convention cannot be checked by this con
 		<property name="fileNamePattern" value="module\-info\.java$"/>
 	</module>
 
+	<suppress files=".*src/test/.*\.java"
+		checks="MethodName"/>
+	</suppressions>
 </module>

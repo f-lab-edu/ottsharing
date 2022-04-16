@@ -6,21 +6,20 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
+
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
+import kr.flab.ottsharing.entity.User;
+import kr.flab.ottsharing.exception.WrongInfoException;
+import kr.flab.ottsharing.protocol.PartyCreateResult;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
 import kr.flab.ottsharing.repository.UserRepository;
-import kr.flab.ottsharing.exception.WrongInfoException;
-import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.protocol.PartyCreateResult;
 import lombok.RequiredArgsConstructor;
-
 
 @Service
 @RequiredArgsConstructor
 public class PartyService {
-
     private final PartyRepository partyRepo;
     private final PartyMemberRepository memberRepo;
     private final UserRepository userRepo;
@@ -32,7 +31,7 @@ public class PartyService {
             .ottPassword(ottPassword)
             .build();
         partyRepo.save(party);
-        
+
         PartyMember member = PartyMember.builder()
             .user(leader)
             .isLeader(true)

@@ -1,12 +1,11 @@
 package kr.flab.ottsharing.service;
-import org.springframework.stereotype.Service;
-import kr.flab.ottsharing.protocol.MyParty;
 
+import org.springframework.stereotype.Service;
+
+import kr.flab.ottsharing.protocol.MyParty;
 
 @Service
 public class MyPartyService {
-  
-
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     public MyParty getMyParty(String userId) {
         /*
@@ -18,7 +17,8 @@ public class MyPartyService {
         Optional<Party> optionalParty = memberRepo.findPartyByUser(user);
         if (optionalParty.isPresent()) {
             Party party = optionalParty.get();
-            return new MyParty(party.getLeader(), memberRepo.findUsersByParty(party), party.getOttId(), party.getOttPassword());
+            return new MyParty(party.getLeader(), memberRepo.findUsersByParty(party),
+                party.getOttId(), party.getOttPassword());
         }
 
         if (waitRepo.existsByUser(user)) {

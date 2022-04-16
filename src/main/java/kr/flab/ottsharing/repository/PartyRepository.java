@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import kr.flab.ottsharing.entity.Party;
 
 @Repository
-public interface PartyRepository extends JpaRepository<Party,Integer> {
+public interface PartyRepository extends JpaRepository<Party, Integer> {
     @Override
     Optional<Party> findById(Integer partyId);
 

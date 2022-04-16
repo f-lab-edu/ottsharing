@@ -3,8 +3,9 @@ package kr.flab.ottsharing.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import kr.flab.ottsharing.entity.User;
 import org.springframework.stereotype.Repository;
+
+import kr.flab.ottsharing.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
