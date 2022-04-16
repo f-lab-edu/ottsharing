@@ -10,12 +10,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PartyMemberService {
 
-    public Boolean checkLeader(PartyMember partymember) {
-        return partymember.isLeader();
+    public Boolean checkLeader(PartyMember partyMember) {
+        return partyMember.isLeader();
     }
 
-    public Party getParty(PartyMember partymember) {
-        return partymember.getParty();
-
+    public Party getParty(PartyMember partyMember) {
+        return partyMember.getParty();
     }
 }
