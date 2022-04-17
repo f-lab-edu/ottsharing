@@ -11,7 +11,6 @@ spring:
       filter:
         enabled: true
   jpa:
-    database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: create
       naming:
