@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "ottsharing.serviceFee",
+      "type": "java.lang.Integer"
+    }
+  ]
+}
