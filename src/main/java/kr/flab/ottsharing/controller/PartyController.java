@@ -30,8 +30,10 @@ public class PartyController {
         return partyServ.fetchMyParty(user);
     }
 
+    // PartyWaiting 구조 변경으로 동작하지 않는 코드
     @PostMapping("/party/join")
     public String joinParty(@RequestParam String userId) {
+        /*
         if (partyServ.pickParty().size() != 0) {
             partyServ.getInParty(userId, partyServ.pickParty().get(0));
             return "파티에 참여되었습니다";
@@ -39,6 +41,8 @@ public class PartyController {
             waitingServ.putWaitingList(userId);
             return "파티 참여 대기중입니다";
         }
+        */
+        return null;
     }
 
     @DeleteMapping("/party/deleteParty")
