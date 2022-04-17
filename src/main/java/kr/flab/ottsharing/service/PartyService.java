@@ -15,6 +15,7 @@ import kr.flab.ottsharing.exception.WrongInfoException;
 import kr.flab.ottsharing.protocol.MyParty;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
 import kr.flab.ottsharing.protocol.PartyMemberInfo;
+import kr.flab.ottsharing.protocol.UpdatePartyInfo;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
@@ -122,6 +123,24 @@ public class PartyService {
 
         return new MyParty(MyParty.Status.HAS_NO_PARTY);
     }
+
+    public String updatePartyInfo(UpdatePartyInfo info) {
+        User user = userRepo.findByUserId(info.getUserId()).get();
+        PartyMember partyMember = memberRepo.findOneByUser(user).get();
+        Integer partyId = partyMember.getParty().getPartyId();
+        Integer writtenPartyId = info.getPartyId();
+
+        if(!partyId.equals(writtenPartyId)) {
+            throw new WrongInfoException("해당 파티에 속하지 않았습니다. 파티id를 다시 바르게 입력해주세요"  );
+        }
+        
+        if (partymemberService.checkLeader(partyMember)) {
+            return partymemberService.changeInfoOfLeader(partyMember, partyMember.getParty(), info);
+        }
+        
+        return partymemberService.changeInfoOfMember(partyMember, partyMember.getParty(), info);
+    }
+
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     public Party enrollParty(String leaderId, String getottId, String getottPassword) {
