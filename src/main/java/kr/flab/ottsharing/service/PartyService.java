@@ -1,5 +1,6 @@
 package kr.flab.ottsharing.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +12,12 @@ import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.WrongInfoException;
+import kr.flab.ottsharing.protocol.MyParty;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
+import kr.flab.ottsharing.protocol.PartyMemberInfo;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
+import kr.flab.ottsharing.repository.PartyWaitingRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +27,7 @@ public class PartyService {
     private final PartyRepository partyRepo;
     private final PartyMemberRepository memberRepo;
     private final UserRepository userRepo;
+    private final PartyWaitingRepository waitingRepo;
     private final PartyMemberService partymemberService;
 
     public PartyCreateResult create(User leader, String ottId, String ottPassword) {
@@ -90,6 +95,32 @@ public class PartyService {
         memberRepo.deleteById(partymember.getPartyMemberId());
 
         return "파티 탈퇴 완료되었습니다";
+    }
+
+    public MyParty fetchMyParty(User user) {
+        Optional<PartyMember> joined = memberRepo.findOneByUser(user);
+        if (joined.isPresent()) {
+            Party party = joined.get().getParty();
+
+            List<PartyMember> members = memberRepo.findByParty(party);
+            List<PartyMemberInfo> memberInfos = new ArrayList<>();
+            for (PartyMember member : members) {
+                PartyMemberInfo memberInfo = PartyMemberInfo.builder()
+                    .memberId(member.getUser().getUserId())
+                    .nickname(member.getNickname())
+                    .isLeader(member.isLeader())
+                    .build();
+                memberInfos.add(memberInfo);
+            }
+            
+            return new MyParty(memberInfos, party.getOttId(), party.getOttPassword());
+        }
+
+        if (waitingRepo.existsByUser(user)) {
+            return new MyParty(MyParty.Status.WAITING_FOR_PARTY);
+        }
+
+        return new MyParty(MyParty.Status.HAS_NO_PARTY);
     }
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
