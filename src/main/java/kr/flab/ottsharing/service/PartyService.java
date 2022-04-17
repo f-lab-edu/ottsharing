@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.Party;
@@ -15,6 +16,8 @@ import kr.flab.ottsharing.exception.WrongInfoException;
 import kr.flab.ottsharing.protocol.MyParty;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
 import kr.flab.ottsharing.protocol.PartyMemberInfo;
+import kr.flab.ottsharing.protocol.PartyJoinResult;
+import kr.flab.ottsharing.protocol.PayResult;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
@@ -28,7 +31,12 @@ public class PartyService {
     private final PartyMemberRepository memberRepo;
     private final UserRepository userRepo;
     private final PartyWaitingRepository waitingRepo;
-    private final PartyMemberService partymemberService;
+    private final PartyMemberService memberService;
+    private final MoneyService moneyService;
+    private final PartyWaitingService waitingService;
+
+    @Value("${ottsharing.serviceFee}")
+    private int serviceFee;
 
     public PartyCreateResult create(User leader, String ottId, String ottPassword) {
         Party party = Party.builder()
@@ -58,11 +66,11 @@ public class PartyService {
         User presentUser = user.get();
         PartyMember partymember = memberRepo.findOneByUser(presentUser).get();
 
-        if (!partymemberService.checkLeader(partymember)) {
+        if (!memberService.checkLeader(partymember)) {
             throw new WrongInfoException("삭제 권한이 없습니다" + userId );
         }
 
-        Party party = partymemberService.getParty(partymember);
+        Party party = memberService.getParty(partymember);
 
         if (!party.getPartyId().equals(partyId)) {
             throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
@@ -73,6 +81,7 @@ public class PartyService {
 
         return "삭제 완료되었습니다";
     }
+    
 
     public String getOutParty(String userId, Integer partyId) {
         Optional<User> user = userRepo.findByUserId(userId);
@@ -82,11 +91,11 @@ public class PartyService {
         User presentUser = user.get();
         PartyMember partymember = memberRepo.findOneByUser(presentUser).get();
 
-        if (partymemberService.checkLeader(partymember)) {
+        if (memberService.checkLeader(partymember)) {
             throw new WrongInfoException("리더인 경우, 탈퇴가 아닌 파티해체 절차로 가주세요" + userId );
         }
 
-        Party party = partymemberService.getParty(partymember);
+        Party party = memberService.getParty(partymember);
 
         if (!party.getPartyId().equals(partyId)) {
             throw new WrongInfoException("탈퇴 권한의 그룹이 아닙니다" + partyId );
@@ -124,16 +133,28 @@ public class PartyService {
     }
 
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
-    public Party enrollParty(String leaderId, String getottId, String getottPassword) {
-        // User Repository 구조 개편으로 코드 정상적으로 동작하지 않음
-        /*
+    @Transactional
+    public PartyJoinResult join(User user) {
+        if (moneyService.pay(user, serviceFee) == PayResult.NOT_ENOUGH_MONEY) {
+            return PartyJoinResult.NOT_ENOUGH_MONEY; 
+        } 
+        
+        Optional<Party> anyNotFullParty = getAnyNotFullParty();
+        if (anyNotFullParty.isEmpty()) {
+            waitingService.addWaiting(user);
+            return PartyJoinResult.ON_WAITING;
+        }
 
-        /*User teamleader = userRepo.getById(leaderId);
-        Party party = Party.builder().leader(teamleader).ottId(getottId).ottPassword(getottPassword).build();
-        Party enrolledParty = partyRepo.save(party);
+        memberService.join(anyNotFullParty.get(), user);
+        return PartyJoinResult.SUCCESS;
+    }
 
-        return enrolledParty; */
-        return null;
+    private Optional<Party> getAnyNotFullParty() {
+        List<Party> parties = partyRepo.findNotFullOldestParties();
+        if (parties.size() == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(parties.get(0));
     }
 
     // 추후 변경해야 할 코드

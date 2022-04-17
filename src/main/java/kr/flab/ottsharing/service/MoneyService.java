@@ -2,12 +2,15 @@ package kr.flab.ottsharing.service;
 
 import javax.transaction.Transactional;
 
+import org.springframework.stereotype.Service;
+
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.PayResult;
 import kr.flab.ottsharing.repository.MoneyRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Service
 public class MoneyService {
     private final MoneyRepository moneyRepo;
 
