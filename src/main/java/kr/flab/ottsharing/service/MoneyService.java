@@ -12,6 +12,12 @@ public class MoneyService {
     private final MoneyRepository moneyRepo;
 
     @Transactional
+    public void settle(User user, int amount) {
+        user.setMoney(user.getMoney() + amount);
+        moneyRepo.save(user);
+    }
+  
+    @Transactional
     public PayResult pay(User user, int amount) {
         if (user.getMoney() < amount) {
             return PayResult.NOT_ENOUGH_MONEY;
