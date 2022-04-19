@@ -15,7 +15,6 @@ public class MoneyController {
 
     @PostMapping("/charge")
     public String chargeMoney(@RequestParam String userId, @RequestParam int moneyToCharge) {
-     
         return moneyService.charge(userId, moneyToCharge);
     }
     
