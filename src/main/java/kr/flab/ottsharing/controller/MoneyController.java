@@ -17,5 +17,10 @@ public class MoneyController {
     public String chargeMoney(@RequestParam String userId, @RequestParam int moneyToCharge) {
         return moneyService.charge(userId, moneyToCharge);
     }
+
+    @PostMapping("/withdraw")
+    public String withdrawMoney(@RequestParam String userId, @RequestParam int moneyToWithdraw) {
+        return moneyService.withdraw(userId, moneyToWithdraw);
+    }
     
 }
