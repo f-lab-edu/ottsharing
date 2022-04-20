@@ -76,6 +76,16 @@ public class MoneyService {
         LocalDate now = LocalDate.now();
         int currentYear = now.getYear();
         int currentMonth = now.getMonthValue();
+
+        Long usingPeriod = 0L;
+        Long month = 0L;
+        Long usingMoney = 0L;
+        Long refundMoney = 0L;
+
+        if(payDate == 29 || payDate == 30 || payDate == 31 ) {
+            payDate = 28;
+        }
+
         LocalDate thisMonthPay = LocalDate.of(currentYear,currentMonth,payDate);
         LocalDate lastMonthPay = thisMonthPay.minusMonths(1);
         LocalDate nextMonthPay = thisMonthPay.plusMonths(1);
@@ -83,11 +93,6 @@ public class MoneyService {
         boolean isNowAfterPayDay = now.isAfter(thisMonthPay);
         boolean isLeader = memberService.checkLeader(partymember);
 
-        Long usingPeriod = 0L;
-        Long month = 0L;
-        Long usingMoney = 0L;
-        Long refundMoney = 0L;
-  
         if (isLeader) {
             serviceFee -= 500L;
         }
