@@ -7,12 +7,14 @@ import kr.flab.ottsharing.entity.PartyWaiting;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.DeleteWaitingResult;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
+import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class PartyWaitingService {
     private final PartyWaitingRepository waitRepo;
+    private final UserRepository userRepo;
 
     public boolean checkWaitingPersonExist() {
         return waitRepo.existsBy();
@@ -23,7 +25,8 @@ public class PartyWaitingService {
         waitRepo.save(waiting);
     }
   
-    public DeleteWaitingResult deleteWaiting(User user) {
+    public DeleteWaitingResult deleteWaiting(String userId) {
+      User user = userRepo.findByUserId(userId).get();
       waitRepo.deleteByUser(user);
       return DeleteWaitingResult.SUCCESS;
     }

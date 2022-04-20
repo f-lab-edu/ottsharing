@@ -39,7 +39,9 @@ public class PartyService {
     @Value("${ottsharing.serviceFee}")
     private int serviceFee;
 
-    public PartyCreateResult create(User leader, String ottId, String ottPassword) {
+    public PartyCreateResult create(String leaderId, String ottId, String ottPassword) {
+        User leader = userRepo.findByUserId(leaderId).get();
+
         Party party = Party.builder()
             .ottId(ottId)
             .ottPassword(ottPassword)
@@ -107,7 +109,9 @@ public class PartyService {
         return "파티 탈퇴 완료되었습니다";
     }
 
-    public MyParty fetchMyParty(User user) {
+    public MyParty fetchMyParty(String userId) {
+        User user = userRepo.findByUserId(userId).get();
+
         Optional<PartyMember> joined = memberRepo.findOneByUser(user);
         if (joined.isPresent()) {
             Party party = joined.get().getParty();
@@ -133,8 +137,8 @@ public class PartyService {
         return new MyParty(MyParty.Status.HAS_NO_PARTY);
     }
 
-    public String updatePartyInfo(UpdatePartyInfo info) {
-        User user = userRepo.findByUserId(info.getUserId()).get();
+    public String updatePartyInfo(String userId, UpdatePartyInfo info) {
+        User user = userRepo.findByUserId(userId).get();
         PartyMember partyMember = memberRepo.findOneByUser(user).get();
         Integer partyId = partyMember.getParty().getPartyId();
         Integer writtenPartyId = info.getPartyId();
@@ -151,9 +155,10 @@ public class PartyService {
     }
 
 
-    // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     @Transactional
-    public PartyJoinResult join(User user) {
+    public PartyJoinResult join(String userId) {
+        User user = userRepo.findByUserId(userId).get();
+
         PayResult payResult = moneyService.pay(user, serviceFee);
         if (payResult == PayResult.NOT_ENOUGH_MONEY) {
             return PartyJoinResult.NOT_ENOUGH_MONEY; 

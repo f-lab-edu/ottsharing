@@ -2,6 +2,7 @@ package kr.flab.ottsharing.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.MyParty;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
 import kr.flab.ottsharing.protocol.PartyJoinResult;
@@ -23,34 +23,32 @@ public class PartyController {
     private final PartyService partyServ;
 
     @PostMapping("/party/create")
-    public PartyCreateResult create(@RequestParam String ottId, @RequestParam String ottPassword) {
-        User user = null; // JWT 구현된 후 자동으로 유저 불러오도록 추후 수정
-        return partyServ.create(user, ottId, ottPassword);
+    public PartyCreateResult create(@CookieValue(name = "userId") String userId, @RequestParam String ottId, @RequestParam String ottPassword) {
+        return partyServ.create(userId, ottId, ottPassword);
     }
 
     @GetMapping("/myParty")
-    public MyParty getMyParty(User user) { // JWT 구현된 후 자동으로 유저 불러오도록 추후 수정
-        return partyServ.fetchMyParty(user);
+    public MyParty getMyParty(@CookieValue(name = "userId") String userId) {
+        return partyServ.fetchMyParty(userId);
     }
 
-    // PartyWaiting 구조 변경으로 동작하지 않는 코드
     @PostMapping("/party/join")
-    public PartyJoinResult joinParty(User user) {
-        return partyServ.join(user);
+    public PartyJoinResult joinParty(@CookieValue(name = "userId") String userId) {
+        return partyServ.join(userId);
     }
 
     @DeleteMapping("/party/deleteParty")
-    public String deleteParty(@RequestParam String userId, @RequestParam Integer partyId) {
+    public String deleteParty(@CookieValue(name = "userId") String userId, @RequestParam Integer partyId) {
         return partyServ.deleteParty(userId, partyId);
     }
 
     @DeleteMapping("/party/getOutParty")
-    public String getOutParty(@RequestParam String userId, @RequestParam Integer partyId) {
+    public String getOutParty(@CookieValue(name = "userId") String userId, @RequestParam Integer partyId) {
         return partyServ.getOutParty(userId, partyId);
     }
 
     @PostMapping("/party/updatePartyInfo")
-    public String updatePartyInfo(@Valid @RequestBody UpdatePartyInfo info) {
-        return partyServ.updatePartyInfo(info);
+    public String updatePartyInfo(@CookieValue(name = "userId") String userId, @Valid @RequestBody UpdatePartyInfo info) {
+        return partyServ.updatePartyInfo(userId, info);
     }
 }
