@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -58,14 +59,12 @@ public class UserController {
     }
 
     @GetMapping("/myPage")
-    public MyInfo getMyInfo() {
-        String userId = "user"; // 나중에 JWT login 구현되면 그에 맞게 자동으로 가져오도록 수정해야 함
+    public MyInfo getMyInfo(@CookieValue(name = "userId") String userId) {
         return userService.fetchMyInfo(userId);
     }
 
     @PutMapping("/myPage")
-    public MyPageUpdateResult changeMyInfo(@RequestBody Map<String, String> request) {
-        String userId = request.get("userId");
+    public MyPageUpdateResult changeMyInfo(@CookieValue(name = "userId") String userId, @RequestBody Map<String, String> request) {
         String password = request.get("password");
         String email = request.get("email");
 
