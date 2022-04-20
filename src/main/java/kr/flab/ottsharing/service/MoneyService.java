@@ -22,7 +22,7 @@ public class MoneyService {
         user.setMoney(user.getMoney() + amount);
         moneyRepo.save(user);
     }
-  
+
     @Transactional
     public PayResult pay(User user, int amount) {
         if (user.getMoney() < amount) {

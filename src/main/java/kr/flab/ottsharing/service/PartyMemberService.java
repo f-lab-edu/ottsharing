@@ -2,11 +2,11 @@ package kr.flab.ottsharing.service;
 
 import java.util.List;
 
-import org.hibernate.WrongClassException;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
+import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.WrongInfoException;
 import kr.flab.ottsharing.protocol.UpdatePartyInfo;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PartyMemberService {
+    private final PartyMemberRepository memberRepo;
 
     private final PartyRepository partyRepo;
     private final PartyMemberRepository partyMemberRepo;
@@ -28,8 +29,17 @@ public class PartyMemberService {
         return partyMember.getParty();
     }
 
-    public String changeInfoOfLeader(PartyMember partyMember, Party party, UpdatePartyInfo info) {
+    public void join(Party party, User user) {
+        PartyMember member = PartyMember.builder()
+            .user(user)
+            .nickname(user.getUserId())
+            .isLeader(false)
+            .party(party)
+            .build();
+        memberRepo.save(member);
+    }
 
+    public String changeInfoOfLeader(PartyMember partyMember, Party party, UpdatePartyInfo info) {
         boolean hasNickname = false;
         boolean hasOttId = false;
         boolean hasOttPassword = false;
@@ -78,7 +88,6 @@ public class PartyMemberService {
     }
 
     public String changeInfoOfMember(PartyMember partyMember, Party party, UpdatePartyInfo info) {
-        
         String nickname = info.getNicknameToChange();
         String ottId = info.getOttId();
         String ottPassword = info.getOttPassword();
@@ -99,14 +108,11 @@ public class PartyMemberService {
     }
 
     public void checkNickNameDuplicate(Party party, String nickname) {
-
         List<PartyMember> partyMembers = partyMemberRepo.findByParty(party);
         for (PartyMember member : partyMembers ) {
             if(member.getNickname().equals(nickname)) {
                 throw new WrongInfoException("파티 내에 같은 닉네임이 있습니다." + nickname );
             }
         }
-
     }
-
 }

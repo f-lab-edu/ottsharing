@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.MyParty;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
+import kr.flab.ottsharing.protocol.PartyJoinResult;
 import kr.flab.ottsharing.protocol.UpdatePartyInfo;
 import kr.flab.ottsharing.service.PartyService;
 import lombok.RequiredArgsConstructor;
@@ -34,17 +35,8 @@ public class PartyController {
 
     // PartyWaiting 구조 변경으로 동작하지 않는 코드
     @PostMapping("/party/join")
-    public String joinParty(@RequestParam String userId) {
-        /*
-        if (partyServ.pickParty().size() != 0) {
-            partyServ.getInParty(userId, partyServ.pickParty().get(0));
-            return "파티에 참여되었습니다";
-        } else {
-            waitingServ.putWaitingList(userId);
-            return "파티 참여 대기중입니다";
-        }
-        */
-        return null;
+    public PartyJoinResult joinParty(User user) {
+        return partyServ.join(user);
     }
 
     @DeleteMapping("/party/deleteParty")
