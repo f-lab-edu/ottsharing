@@ -12,6 +12,7 @@ import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.MoneyException;
 import kr.flab.ottsharing.protocol.PayResult;
+import kr.flab.ottsharing.protocol.RefundResult;
 import kr.flab.ottsharing.repository.MoneyRepository;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.UserRepository;
@@ -68,7 +69,7 @@ public class MoneyService {
     }
 
     @Transactional
-    public String refund(String userId) {
+    public RefundResult refund(String userId) {
         User user = userRepository.findByUserId(userId).get();
         int payDate = user.getCreatedTime().getDayOfMonth();
         PartyMember partymember = memberRepo.findOneByUser(user).get();
@@ -86,7 +87,7 @@ public class MoneyService {
             payDate = 28;
         }
 
-        LocalDate thisMonthPay = LocalDate.of(currentYear,currentMonth,payDate);
+        LocalDate thisMonthPay = LocalDate.of(currentYear, currentMonth, payDate);
         LocalDate lastMonthPay = thisMonthPay.minusMonths(1);
         LocalDate nextMonthPay = thisMonthPay.plusMonths(1);
 
@@ -98,14 +99,14 @@ public class MoneyService {
         }
 
         if (isNowAfterPayDay) {
-            month = ChronoUnit.DAYS.between(nextMonthPay,thisMonthPay);
-            usingPeriod = ChronoUnit.DAYS.between(now,thisMonthPay);
+            month = ChronoUnit.DAYS.between(nextMonthPay, thisMonthPay);
+            usingPeriod = ChronoUnit.DAYS.between(now, thisMonthPay);
             
         }
 
         if (!isNowAfterPayDay) {
-            month = ChronoUnit.DAYS.between(thisMonthPay,lastMonthPay);
-            usingPeriod = ChronoUnit.DAYS.between(now,lastMonthPay);
+            month = ChronoUnit.DAYS.between(thisMonthPay, lastMonthPay);
+            usingPeriod = ChronoUnit.DAYS.between(now, lastMonthPay);
         }
 
         usingMoney = (serviceFee / month) * usingPeriod;
@@ -113,7 +114,7 @@ public class MoneyService {
         user.setMoney(user.getMoney() + refundMoney);
         moneyRepo.save(user);
         
-        return "가상머니로 " + refundMoney +"원 환불 완료되었습니다.";
+        return RefundResult.SUCCESS;
     }
 
 }
