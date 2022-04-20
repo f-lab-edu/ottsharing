@@ -8,7 +8,7 @@ public class RefundResult {
     private Status status;
     private Long refundMoney;
 
-    public RefundResult(Long refundMoney){
+    public RefundResult(Long refundMoney) {
         this.status = Status.SUCCESS;
         this.refundMoney = refundMoney;
     }
