@@ -82,7 +82,7 @@ public class MoneyService {
         Long usingMoney = 0L;
         Long refundMoney = 0L;
 
-        if(payDate == 29 || payDate == 30 || payDate == 31 ) {
+        if (payDate == 29 || payDate == 30 || payDate == 31) {
             payDate = 28;
         }
 
@@ -97,13 +97,13 @@ public class MoneyService {
             serviceFee -= 500L;
         }
 
-        if(isNowAfterPayDay) {
+        if (isNowAfterPayDay) {
             month = ChronoUnit.DAYS.between(nextMonthPay,thisMonthPay);
             usingPeriod = ChronoUnit.DAYS.between(now,thisMonthPay);
             
         }
 
-        if(!isNowAfterPayDay) {
+        if (!isNowAfterPayDay) {
             month = ChronoUnit.DAYS.between(thisMonthPay,lastMonthPay);
             usingPeriod = ChronoUnit.DAYS.between(now,lastMonthPay);
         }
