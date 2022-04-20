@@ -114,7 +114,7 @@ public class MoneyService {
         user.setMoney(user.getMoney() + refundMoney);
         moneyRepo.save(user);
         
-        return RefundResult.SUCCESS;
+        return new RefundResult(refundMoney);
     }
 
 }
