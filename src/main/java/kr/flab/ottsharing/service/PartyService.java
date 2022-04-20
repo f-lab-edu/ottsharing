@@ -135,7 +135,8 @@ public class PartyService {
     // Party Entity 구조 변경으로 인해 동작하지 않는 코드
     @Transactional
     public PartyJoinResult join(User user) {
-        if (moneyService.pay(user, serviceFee) == PayResult.NOT_ENOUGH_MONEY) {
+        PayResult payResult = moneyService.pay(user, serviceFee);
+        if (payResult == PayResult.NOT_ENOUGH_MONEY) {
             return PartyJoinResult.NOT_ENOUGH_MONEY; 
         } 
         
