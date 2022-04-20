@@ -1,8 +1,11 @@
 package kr.flab.ottsharing.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,15 +13,14 @@ import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.MyParty;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
 import kr.flab.ottsharing.protocol.PartyJoinResult;
+import kr.flab.ottsharing.protocol.UpdatePartyInfo;
 import kr.flab.ottsharing.service.PartyService;
-import kr.flab.ottsharing.service.PartyWaitingService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 public class PartyController {
     private final PartyService partyServ;
-    private final PartyWaitingService waitingServ;
 
     @PostMapping("/party/create")
     public PartyCreateResult create(@RequestParam String ottId, @RequestParam String ottPassword) {
@@ -45,5 +47,10 @@ public class PartyController {
     @DeleteMapping("/party/getOutParty")
     public String getOutParty(@RequestParam String userId, @RequestParam Integer partyId) {
         return partyServ.getOutParty(userId, partyId);
+    }
+
+    @PostMapping("/party/updatePartyInfo")
+    public String updatePartyInfo(@Valid @RequestBody UpdatePartyInfo info) {
+        return partyServ.updatePartyInfo(info);
     }
 }
