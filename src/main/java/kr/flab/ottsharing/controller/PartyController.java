@@ -33,7 +33,6 @@ public class PartyController {
         return partyServ.fetchMyParty(user);
     }
 
-    // PartyWaiting 구조 변경으로 동작하지 않는 코드
     @PostMapping("/party/join")
     public PartyJoinResult joinParty(User user) {
         return partyServ.join(user);
