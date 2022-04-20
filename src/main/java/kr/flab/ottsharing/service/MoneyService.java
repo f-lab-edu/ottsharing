@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.User;
+import kr.flab.ottsharing.exception.MoneyException;
 import kr.flab.ottsharing.protocol.PayResult;
 import kr.flab.ottsharing.repository.MoneyRepository;
 import kr.flab.ottsharing.repository.UserRepository;
@@ -42,4 +43,18 @@ public class MoneyService {
 
         return "충전 완료되었습니다";
     }
+
+    @Transactional
+    public String withdraw(String userId, int moneyToWithdraw) {
+
+        User user = userRepository.findByUserId(userId).get();
+        if (user.getMoney() < moneyToWithdraw) {
+            throw new MoneyException("현재 돈이 부족합니다.");
+        }
+
+        user.setMoney(user.getMoney() - moneyToWithdraw);
+        moneyRepo.save(user);
+        return "출금 완료되었습니다";
+    }
+
 }
