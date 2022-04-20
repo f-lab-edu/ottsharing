@@ -2,12 +2,18 @@ package kr.flab.ottsharing.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.protocol.MyInfo;
 import kr.flab.ottsharing.protocol.MyPageUpdateResult;
 import kr.flab.ottsharing.protocol.RegisterResult;
@@ -19,6 +25,28 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
     private final UserService userService;
 
+    @PostMapping("/login")
+    public String login(@RequestBody Map<String, String> request, HttpServletResponse response){
+        String userId = request.get("userId");
+        User user = userService.login(userId);
+        if (user == null) {
+            return "로그인 실패";
+        }
+
+        Cookie cookie = new Cookie("userId", userId);
+        response.addCookie(cookie);
+
+        return "로그인 성공";
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<HttpStatus> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("userId", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     @PostMapping("/register")
     public RegisterResult register(@RequestBody Map<String, String> req) {
@@ -35,7 +63,6 @@ public class UserController {
         return userService.fetchMyInfo(userId);
     }
 
-
     @PutMapping("/myPage")
     public MyPageUpdateResult changeMyInfo(@RequestBody Map<String, String> request) {
         String userId = request.get("userId");
@@ -44,5 +71,4 @@ public class UserController {
 
         return userService.updateMyInfo(userId, password, email);
     }
-
 }

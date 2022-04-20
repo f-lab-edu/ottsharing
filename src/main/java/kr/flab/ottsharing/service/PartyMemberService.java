@@ -2,7 +2,6 @@ package kr.flab.ottsharing.service;
 
 import java.util.List;
 
-import org.hibernate.WrongClassException;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.Party;
