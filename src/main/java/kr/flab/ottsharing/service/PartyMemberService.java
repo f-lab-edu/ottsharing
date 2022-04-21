@@ -115,4 +115,11 @@ public class PartyMemberService {
             }
         }
     }
+
+    public List<PartyMember> getUsersPaidAt(int day) {
+        if (day >= 28) {
+            return memberRepo.findByCreatedDay28To31();
+        }
+        return memberRepo.findByCreatedDay1To28(day);
+    }
 }
