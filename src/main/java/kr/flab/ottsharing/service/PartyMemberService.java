@@ -29,7 +29,7 @@ public class PartyMemberService {
         return partyMember.getParty();
     }
 
-    public void join(Party party, User user) {
+    public void joinAfterPay(Party party, User user) {
         PartyMember member = PartyMember.builder()
             .user(user)
             .nickname(user.getUserId())
