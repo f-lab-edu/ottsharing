@@ -39,8 +39,14 @@ public class PartyService {
     @Value("${ottsharing.serviceFee}")
     private int serviceFee;
 
+    @Transactional
     public PartyCreateResult create(String leaderId, String ottId, String ottPassword) {
         User leader = userRepo.findByUserId(leaderId).get();
+
+        PayResult payResult = moneyService.pay(leader, serviceFee);
+        if (payResult == PayResult.NOT_ENOUGH_MONEY) {
+            return PartyCreateResult.NOT_ENOUGH_MONEY; 
+        } 
 
         Party party = Party.builder()
             .ottId(ottId)
@@ -61,7 +67,6 @@ public class PartyService {
 
     @Transactional
     public String deleteParty(String userId, Integer partyId) {
-
         Optional<User> user = userRepo.findByUserId(userId);
         if (!user.isPresent()) {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
