@@ -75,12 +75,14 @@ public class PartyService {
         refreshIsFull(party);
     }
 
-    private void refreshIsFull(Party party) {
+    public void refreshIsFull(Party party) {
         int count = memberService.countMembers(party);
         if (count < 4) {
-            return;
+            party.setFull(false);
+        } else {
+            party.setFull(true);
         }
-        party.setFull(true);
+        partyRepo.save(party);
     }
 
     @Transactional
