@@ -36,15 +36,22 @@ public class MoneyService {
     }
 
     @Transactional
-    public PayResult pay(User user, int amount) {
-        if (user.getMoney() < amount) {
+    public PayResult pay(User user) {
+        if (user.getMoney() < serviceFee) {
             return PayResult.NOT_ENOUGH_MONEY;
         }
 
-        user.setMoney(user.getMoney() - amount);
+        user.setMoney(user.getMoney() - serviceFee);
         moneyRepo.save(user);
 
         return PayResult.SUCCESS;
+    }
+
+    public boolean hasEnoughMoney(User user) {
+        if (user.getMoney() < serviceFee) {
+            return false;
+        }
+        return true;
     }
 
     public String charge(String userId, int moneyToCharge) {
