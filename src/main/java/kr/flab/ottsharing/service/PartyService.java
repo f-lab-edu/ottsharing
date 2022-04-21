@@ -107,7 +107,7 @@ public class PartyService {
         }
 
         memberRepo.deleteById(partyMember.getPartyMemberId());
-        moneyService.refund(currentUser.getUserId(),partyMember);
+        moneyService.refund(currentUser.getUserId() , partyMember);
         party.setFull(false);
         partyRepo.save(party);
 
