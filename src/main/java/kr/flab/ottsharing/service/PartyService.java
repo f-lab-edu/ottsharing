@@ -15,6 +15,7 @@ import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.WrongInfoException;
 import kr.flab.ottsharing.protocol.MyParty;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
+import kr.flab.ottsharing.protocol.PartyDeleteResult;
 import kr.flab.ottsharing.protocol.PartyMemberInfo;
 import kr.flab.ottsharing.protocol.PartyJoinResult;
 import kr.flab.ottsharing.protocol.PayResult;
@@ -60,7 +61,7 @@ public class PartyService {
     }
 
     @Transactional
-    public String deleteParty(String userId, Integer partyId) {
+    public PartyDeleteResult deleteParty(String userId, Integer partyId) {
 
         Optional<User> user = userRepo.findByUserId(userId);
         if (!user.isPresent()) {
@@ -79,10 +80,15 @@ public class PartyService {
             throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
         }
 
-        memberRepo.deleteAllByParty(party);
-        partyRepo.deleteById(partyId);
+        boolean refundComplete = memberService.refundByPartyDelete(party);
+        
+        if(refundComplete) {
+            memberRepo.deleteAllByParty(party);
+            partyRepo.deleteById(partyId);
+            return PartyDeleteResult.SUCCESS;
+        }
 
-        return "삭제 완료되었습니다";
+        return PartyDeleteResult.FAILED;
     }
     
     @Transactional

@@ -2,12 +2,15 @@ package kr.flab.ottsharing.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.WrongInfoException;
+import kr.flab.ottsharing.protocol.RefundResult;
 import kr.flab.ottsharing.protocol.UpdatePartyInfo;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
@@ -20,6 +23,7 @@ public class PartyMemberService {
 
     private final PartyRepository partyRepo;
     private final PartyMemberRepository partyMemberRepo;
+    private final MoneyService moneyService;
 
     public Boolean checkLeader(PartyMember partyMember) {
         return partyMember.isLeader();
@@ -125,5 +129,25 @@ public class PartyMemberService {
   
     public int countMembers(Party party) {
         return memberRepo.findByParty(party).size();
+    }
+
+    @Transactional
+    public Boolean refundByPartyDelete(Party party) {
+        List<PartyMember> partyMembers = partyMemberRepo.findByParty(party);
+        boolean result = false;
+        int checkCnt = 0;
+        for (PartyMember member : partyMembers) {
+            String userId = member.getUser().getUserId();
+            RefundResult refundResult = moneyService.refund(userId, member);
+            if (refundResult.getStatus() == RefundResult.Status.SUCCESS) {
+                checkCnt++;
+            }
+        }
+
+        if(checkCnt == countMembers(party)) {
+            result = true;
+        }
+
+        return result;
     }
 }
