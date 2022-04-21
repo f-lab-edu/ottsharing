@@ -36,14 +36,11 @@ public class PartyService {
     private final MoneyService moneyService;
     private final PartyWaitingService waitingService;
 
-    @Value("${ottsharing.serviceFee}")
-    private int serviceFee;
-
     @Transactional
     public PartyCreateResult create(String leaderId, String ottId, String ottPassword) {
         User leader = userRepo.findByUserId(leaderId).get();
 
-        PayResult payResult = moneyService.pay(leader, serviceFee);
+        PayResult payResult = moneyService.pay(leader);
         if (payResult == PayResult.NOT_ENOUGH_MONEY) {
             return PartyCreateResult.NOT_ENOUGH_MONEY; 
         } 
@@ -62,7 +59,24 @@ public class PartyService {
             .build();
         memberRepo.save(member);
 
+        inviteMembersInWaiting(party);
         return PartyCreateResult.SUCCESS;
+    }
+
+    private void inviteMembersInWaiting(Party party) {
+        List<User> waitingUsers = waitingService.getTop3Waitings();
+        for (User waitingUser : waitingUsers) {
+            memberService.join(party, waitingUser);
+        }
+        refreshIsFull(party);
+    }
+
+    private void refreshIsFull(Party party) {
+        int count = memberService.countMembers(party);
+        if (count < 4) {
+            return;
+        }
+        party.setFull(true);
     }
 
     @Transactional
@@ -164,7 +178,7 @@ public class PartyService {
     public PartyJoinResult join(String userId) {
         User user = userRepo.findByUserId(userId).get();
 
-        PayResult payResult = moneyService.pay(user, serviceFee);
+        PayResult payResult = moneyService.pay(user);
         if (payResult == PayResult.NOT_ENOUGH_MONEY) {
             return PartyJoinResult.NOT_ENOUGH_MONEY; 
         } 
@@ -185,30 +199,5 @@ public class PartyService {
             return Optional.empty();
         }
         return Optional.of(parties.get(0));
-    }
-
-    // 추후 변경해야 할 코드
-    public boolean makeFull(Party party) {
-/*
-        party.setFull(true);
-        partyRepo.save(party);
-*/
-        return true;
-    }
-
-    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
-    public List<Party> pickParty() {
-        /*
-        List<Party> notFullParties = (List<Party>) partyRepo.findByIsFullFalse();
-        return notFullParties;
-         */
-        return null;
-    }
-
-    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
-    public void getInParty(String userId, Party pickParty){
-        /*User userToJoin = userRepo.getById(userId);
-        PartyMember member = PartyMember.builder().user(userToJoin).party(pickParty).build();
-        memberRepo.save(member);*/
     }
 }

@@ -51,7 +51,7 @@ public class PartyWaitingRepositoryTest {
     }
 
     @Test
-    void findTop3ByOrderByCreatedTimeAsc_테스트() {
+    void findByOrderByCreatedTimeAsc_테스트() {
         // given
         User[] users = new User[5];
         PartyWaiting[] waits = new PartyWaiting[5];
@@ -67,13 +67,14 @@ public class PartyWaitingRepositoryTest {
         waitRepo.save(waits[0]);
 
         // when
-        Iterable<PartyWaiting> top3Waits = waitRepo.findTop3ByOrderByCreatedTimeAsc();
+        Iterable<PartyWaiting> waitEntities = waitRepo.findByOrderByCreatedTimeAsc();
 
         // then
         int userNumber = 1;
-        for (PartyWaiting top3Wait : top3Waits) {
-            assertEquals(String.valueOf(userNumber), top3Wait.getUser().getUserId());
+        for (PartyWaiting wait : waitEntities) {
+            assertEquals(String.valueOf(userNumber), wait.getUser().getUserId());
             userNumber++;
+            if (userNumber >= 4) break;
         }
     }
 

@@ -1,5 +1,8 @@
 package kr.flab.ottsharing.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.Party;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PartyWaitingService {
+    private final MoneyService moneyService;
     private final PartyWaitingRepository waitRepo;
     private final UserRepository userRepo;
 
@@ -31,20 +35,19 @@ public class PartyWaitingService {
       return DeleteWaitingResult.SUCCESS;
     }
 
-    //추후 변경해야 할 코드
-    public Integer putPartyMember(Party enrolledparty) {
-        /*
-        Iterable<PartyWaiting> top3Waits = waitRepo.findTop3ByOrderByCreatedTimeAsc();
-        int memberNumber = 0;
-        for (PartyWaiting top3Wait : top3Waits) {
-            PartyMember member = PartyMember.builder().user(top3Wait.getUser()).party(enrolledparty).build();
-            memberRepo.save(member);
-            waitRepo.deleteById(top3Wait.getWaitingId());
-            memberNumber++;
-        }
+    public List<User> getTop3Waitings() {
+        List<PartyWaiting> waits = waitRepo.findByOrderByCreatedTimeAsc();
+        List<User> top3Users = new ArrayList<>();
 
-        return memberNumber;
-        */
-        return 0;
+        for (PartyWaiting wait : waits) {
+            if (top3Users.size() >= 3) break;
+            User user = wait.getUser();
+
+            if (moneyService.hasEnoughMoney(user)) {
+                top3Users.add(user);
+            }
+        }
+        
+        return top3Users;
     }
 }

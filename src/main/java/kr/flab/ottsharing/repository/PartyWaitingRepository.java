@@ -14,7 +14,7 @@ public interface PartyWaitingRepository extends JpaRepository<PartyWaiting, Inte
 
     void deleteByUser(User user);
 
-    List<PartyWaiting> findTop3ByOrderByCreatedTimeAsc();
+    List<PartyWaiting> findByOrderByCreatedTimeAsc();
 
     boolean existsBy();
 }
