@@ -115,4 +115,8 @@ public class PartyMemberService {
             }
         }
     }
+
+    public int countMembers(Party party) {
+        return memberRepo.findByParty(party).size();
+    }
 }
