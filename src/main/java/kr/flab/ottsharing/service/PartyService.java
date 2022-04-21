@@ -42,6 +42,11 @@ public class PartyService {
     public PartyCreateResult create(String leaderId, String ottId, String ottPassword) {
         User leader = userRepo.findByUserId(leaderId).get();
 
+        PayResult payResult = moneyService.pay(leader, serviceFee - 500);
+        if (payResult == PayResult.NOT_ENOUGH_MONEY) {
+            return PartyCreateResult.NOT_ENOUGH_MONEY; 
+        } 
+
         Party party = Party.builder()
             .ottId(ottId)
             .ottPassword(ottPassword)
