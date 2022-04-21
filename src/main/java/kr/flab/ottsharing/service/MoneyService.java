@@ -14,7 +14,6 @@ import kr.flab.ottsharing.exception.MoneyException;
 import kr.flab.ottsharing.protocol.PayResult;
 import kr.flab.ottsharing.protocol.RefundResult;
 import kr.flab.ottsharing.repository.MoneyRepository;
-import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +24,6 @@ public class MoneyService {
     private final MoneyRepository moneyRepo;
     private final UserRepository userRepository;
     private final PartyMemberService memberService;
-    private final PartyMemberRepository memberRepo;
 
     @Value("${ottsharing.serviceFee}")
     private Long serviceFee;
@@ -69,14 +67,14 @@ public class MoneyService {
     }
 
     @Transactional
-    public RefundResult refund(String userId) {
+    public RefundResult refund(String userId, PartyMember partyMember) {
         User user = userRepository.findByUserId(userId).get();
         int payDate = user.getCreatedTime().getDayOfMonth();
-        PartyMember partymember = memberRepo.findOneByUser(user).get();
      
         LocalDate now = LocalDate.now();
         int currentYear = now.getYear();
         int currentMonth = now.getMonthValue();
+        int currentDate = now.getDayOfMonth();
 
         Long usingPeriod = 0L;
         Long month = 0L;
@@ -92,7 +90,8 @@ public class MoneyService {
         LocalDate nextMonthPay = thisMonthPay.plusMonths(1);
 
         boolean isNowAfterPayDay = now.isAfter(thisMonthPay);
-        boolean isLeader = memberService.checkLeader(partymember);
+        boolean isLeader = memberService.checkLeader(partyMember);
+        boolean saveMoney = false;
 
         if (isLeader) {
             serviceFee -= 500L;
@@ -111,8 +110,16 @@ public class MoneyService {
 
         usingMoney = (serviceFee / month) * usingPeriod;
         refundMoney = serviceFee - usingMoney;
-        user.setMoney(user.getMoney() + refundMoney);
-        moneyRepo.save(user);
+
+        if (payDate == currentDate) {
+            refundMoney = serviceFee;
+        }
+
+        if (!saveMoney) {
+            user.setMoney(user.getMoney() + refundMoney);
+            moneyRepo.save(user);
+            saveMoney = true;
+        }
         
         return new RefundResult(refundMoney);
     }
