@@ -91,6 +91,7 @@ public class MoneyService {
 
         boolean isNowAfterPayDay = now.isAfter(thisMonthPay);
         boolean isLeader = memberService.checkLeader(partyMember);
+        boolean saveMoney = false;
 
         if (isLeader) {
             serviceFee -= 500L;
@@ -113,9 +114,12 @@ public class MoneyService {
         if (payDate == currentDate) {
             refundMoney = serviceFee;
         }
-        
-        user.setMoney(user.getMoney() + refundMoney);
-        moneyRepo.save(user);
+
+        if (!saveMoney) {
+            user.setMoney(user.getMoney() + refundMoney);
+            moneyRepo.save(user);
+            saveMoney = true;
+        }
         
         return new RefundResult(refundMoney);
     }

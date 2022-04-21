@@ -92,7 +92,7 @@ public class PartyService {
         if (!user.isPresent()) {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
         }
-        
+
         User currentUser = user.get();
         PartyMember partyMember = memberRepo.findOneByUser(currentUser).get();
 
