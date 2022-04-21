@@ -62,7 +62,25 @@ public class PartyService {
             .build();
         memberRepo.save(member);
 
+        inviteMembersInWaiting(party);
         return PartyCreateResult.SUCCESS;
+    }
+
+    private void inviteMembersInWaiting(Party party) {
+        List<User> waitingUsers = waitingService.getTop3Waitings();
+        for (User waitingUser : waitingUsers) {
+            memberService.joinAfterPay(party, waitingUser);
+            waitingService.deleteWaiting(waitingUser.getUserId());
+        }
+        refreshIsFull(party);
+    }
+
+    private void refreshIsFull(Party party) {
+        int count = memberService.countMembers(party);
+        if (count < 4) {
+            return;
+        }
+        party.setFull(true);
     }
 
     @Transactional
@@ -180,7 +198,7 @@ public class PartyService {
             return PartyJoinResult.ON_WAITING;
         }
 
-        memberService.join(anyNotFullParty.get(), user);
+        memberService.joinAfterPay(anyNotFullParty.get(), user);
         return PartyJoinResult.SUCCESS;
     }
 
