@@ -96,10 +96,6 @@ public class MoneyService {
             serviceFee -= 500L;
         }
 
-        if (payDate == currentDate) {
-            return new RefundResult(serviceFee);
-        }
-
         if (isNowAfterPayDay) {
             month = ChronoUnit.DAYS.between(nextMonthPay, thisMonthPay);
             usingPeriod = ChronoUnit.DAYS.between(now, thisMonthPay);
@@ -113,6 +109,11 @@ public class MoneyService {
 
         usingMoney = (serviceFee / month) * usingPeriod;
         refundMoney = serviceFee - usingMoney;
+
+        if (payDate == currentDate) {
+            refundMoney = serviceFee;
+        }
+        
         user.setMoney(user.getMoney() + refundMoney);
         moneyRepo.save(user);
         
