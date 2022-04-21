@@ -74,18 +74,17 @@ public class PartyService {
         refreshIsFull(party);
     }
 
-    public void refreshIsFull(Party party) {
+    private void refreshIsFull(Party party) {
         int count = memberService.countMembers(party);
         if (count < 4) {
-            party.setFull(false);
-        } else {
-            party.setFull(true);
+            return;
         }
-        partyRepo.save(party);
+        party.setFull(true);
     }
 
     @Transactional
     public String deleteParty(String userId, Integer partyId) {
+
         Optional<User> user = userRepo.findByUserId(userId);
         if (!user.isPresent()) {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
@@ -204,5 +203,30 @@ public class PartyService {
             return Optional.empty();
         }
         return Optional.of(parties.get(0));
+    }
+
+    // 추후 변경해야 할 코드
+    public boolean makeFull(Party party) {
+/*
+        party.setFull(true);
+        partyRepo.save(party);
+*/
+        return true;
+    }
+
+    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
+    public List<Party> pickParty() {
+        /*
+        List<Party> notFullParties = (List<Party>) partyRepo.findByIsFullFalse();
+        return notFullParties;
+         */
+        return null;
+    }
+
+    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
+    public void getInParty(String userId, Party pickParty){
+        /*User userToJoin = userRepo.getById(userId);
+        PartyMember member = PartyMember.builder().user(userToJoin).party(pickParty).build();
+        memberRepo.save(member);*/
     }
 }
