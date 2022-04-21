@@ -85,26 +85,31 @@ public class PartyService {
         return "삭제 완료되었습니다";
     }
     
-
+    @Transactional
     public String getOutParty(String userId, Integer partyId) {
         Optional<User> user = userRepo.findByUserId(userId);
+
         if (!user.isPresent()) {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
         }
-        User presentUser = user.get();
-        PartyMember partymember = memberRepo.findOneByUser(presentUser).get();
+        
+        User currentUser = user.get();
+        PartyMember partyMember = memberRepo.findOneByUser(currentUser).get();
 
-        if (memberService.checkLeader(partymember)) {
+        if (memberService.checkLeader(partyMember)) {
             throw new WrongInfoException("리더인 경우, 탈퇴가 아닌 파티해체 절차로 가주세요" + userId );
         }
 
-        Party party = memberService.getParty(partymember);
+        Party party = memberService.getParty(partyMember);
 
         if (!party.getPartyId().equals(partyId)) {
             throw new WrongInfoException("탈퇴 권한의 그룹이 아닙니다" + partyId );
         }
 
-        memberRepo.deleteById(partymember.getPartyMemberId());
+        memberRepo.deleteById(partyMember.getPartyMemberId());
+        moneyService.refund(currentUser.getUserId(),partyMember);
+        party.setFull(false);
+        partyRepo.save(party);
 
         return "파티 탈퇴 완료되었습니다";
     }
