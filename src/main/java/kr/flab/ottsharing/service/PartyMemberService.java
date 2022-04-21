@@ -16,8 +16,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PartyMemberService {
+    private final PartyService partyService;
     private final PartyMemberRepository memberRepo;
-
     private final PartyRepository partyRepo;
     private final PartyMemberRepository partyMemberRepo;
 
@@ -29,7 +29,7 @@ public class PartyMemberService {
         return partyMember.getParty();
     }
 
-    public void join(Party party, User user) {
+    public void joinAfterPay(Party party, User user) {
         PartyMember member = PartyMember.builder()
             .user(user)
             .nickname(user.getUserId())
@@ -37,6 +37,8 @@ public class PartyMemberService {
             .party(party)
             .build();
         memberRepo.save(member);
+        
+        partyService.refreshIsFull(party);
     }
 
     public String changeInfoOfLeader(PartyMember partyMember, Party party, UpdatePartyInfo info) {
@@ -121,5 +123,9 @@ public class PartyMemberService {
             return memberRepo.findByCreatedDay28To31();
         }
         return memberRepo.findByCreatedDay1To28(day);
+    }
+  
+    public int countMembers(Party party) {
+        return memberRepo.findByParty(party).size();
     }
 }
