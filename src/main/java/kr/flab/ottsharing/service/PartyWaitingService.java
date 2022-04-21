@@ -1,8 +1,5 @@
 package kr.flab.ottsharing.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.Party;
@@ -33,15 +30,21 @@ public class PartyWaitingService {
       waitRepo.deleteByUser(user);
       return DeleteWaitingResult.SUCCESS;
     }
-    
-    public List<User> getTop3Waitings() {
-        List<PartyWaiting> top3Waits = waitRepo.findTop3ByOrderByCreatedTimeAsc();
-        List<User> top3Users = new ArrayList<>();
 
+    //추후 변경해야 할 코드
+    public Integer putPartyMember(Party enrolledparty) {
+        /*
+        Iterable<PartyWaiting> top3Waits = waitRepo.findTop3ByOrderByCreatedTimeAsc();
+        int memberNumber = 0;
         for (PartyWaiting top3Wait : top3Waits) {
-            top3Users.add(top3Wait.getUser());
+            PartyMember member = PartyMember.builder().user(top3Wait.getUser()).party(enrolledparty).build();
+            memberRepo.save(member);
+            waitRepo.deleteById(top3Wait.getWaitingId());
+            memberNumber++;
         }
-        
-        return top3Users;
+
+        return memberNumber;
+        */
+        return 0;
     }
 }
