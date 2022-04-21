@@ -29,7 +29,7 @@ public class PartyMemberService {
         return partyMember.getParty();
     }
 
-    public void join(Party party, User user) {
+    public void joinAfterPay(Party party, User user) {
         PartyMember member = PartyMember.builder()
             .user(user)
             .nickname(user.getUserId())
@@ -114,5 +114,9 @@ public class PartyMemberService {
                 throw new WrongInfoException("파티 내에 같은 닉네임이 있습니다." + nickname );
             }
         }
+    }
+
+    public int countMembers(Party party) {
+        return memberRepo.findByParty(party).size();
     }
 }
