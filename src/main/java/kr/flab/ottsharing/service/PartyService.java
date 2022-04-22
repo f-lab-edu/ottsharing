@@ -62,7 +62,6 @@ public class PartyService {
 
     @Transactional
     public PartyDeleteResult deleteParty(String userId, Integer partyId) {
-
         Optional<User> user = userRepo.findByUserId(userId);
         if (!user.isPresent()) {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
