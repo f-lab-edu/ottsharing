@@ -15,6 +15,7 @@ import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.WrongInfoException;
 import kr.flab.ottsharing.protocol.MyParty;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
+import kr.flab.ottsharing.protocol.PartyDeleteResult;
 import kr.flab.ottsharing.protocol.PartyMemberInfo;
 import kr.flab.ottsharing.protocol.PartyJoinResult;
 import kr.flab.ottsharing.protocol.PayResult;
@@ -60,8 +61,7 @@ public class PartyService {
     }
 
     @Transactional
-    public String deleteParty(String userId, Integer partyId) {
-
+    public PartyDeleteResult deleteParty(String userId, Integer partyId) {
         Optional<User> user = userRepo.findByUserId(userId);
         if (!user.isPresent()) {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
@@ -79,10 +79,10 @@ public class PartyService {
             throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
         }
 
+        memberService.refundByPartyDelete(party);
         memberRepo.deleteAllByParty(party);
         partyRepo.deleteById(partyId);
-
-        return "삭제 완료되었습니다";
+        return PartyDeleteResult.SUCCESS;
     }
     
     @Transactional
@@ -185,30 +185,5 @@ public class PartyService {
             return Optional.empty();
         }
         return Optional.of(parties.get(0));
-    }
-
-    // 추후 변경해야 할 코드
-    public boolean makeFull(Party party) {
-/*
-        party.setFull(true);
-        partyRepo.save(party);
-*/
-        return true;
-    }
-
-    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
-    public List<Party> pickParty() {
-        /*
-        List<Party> notFullParties = (List<Party>) partyRepo.findByIsFullFalse();
-        return notFullParties;
-         */
-        return null;
-    }
-
-    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
-    public void getInParty(String userId, Party pickParty){
-        /*User userToJoin = userRepo.getById(userId);
-        PartyMember member = PartyMember.builder().user(userToJoin).party(pickParty).build();
-        memberRepo.save(member);*/
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.flab.ottsharing.protocol.MyParty;
 import kr.flab.ottsharing.protocol.PartyCreateResult;
+import kr.flab.ottsharing.protocol.PartyDeleteResult;
 import kr.flab.ottsharing.protocol.PartyJoinResult;
 import kr.flab.ottsharing.protocol.UpdatePartyInfo;
 import kr.flab.ottsharing.service.PartyService;
@@ -38,7 +39,7 @@ public class PartyController {
     }
 
     @DeleteMapping("/party/deleteParty")
-    public String deleteParty(@CookieValue(name = "userId") String userId, @RequestParam Integer partyId) {
+    public PartyDeleteResult deleteParty(@CookieValue(name = "userId") String userId, @RequestParam Integer partyId) {
         return partyServ.deleteParty(userId, partyId);
     }
 

@@ -23,7 +23,6 @@ public class MoneyService {
     
     private final MoneyRepository moneyRepo;
     private final UserRepository userRepository;
-    private final PartyMemberService memberService;
 
     @Value("${ottsharing.serviceFee}")
     private Long serviceFee;
@@ -90,7 +89,7 @@ public class MoneyService {
         LocalDate nextMonthPay = thisMonthPay.plusMonths(1);
 
         boolean isNowAfterPayDay = now.isAfter(thisMonthPay);
-        boolean isLeader = memberService.checkLeader(partyMember);
+        boolean isLeader = partyMember.isLeader();
         boolean saveMoney = false;
 
         if (isLeader) {

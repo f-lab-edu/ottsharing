@@ -2,6 +2,8 @@ package kr.flab.ottsharing.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.entity.Party;
@@ -20,6 +22,7 @@ public class PartyMemberService {
 
     private final PartyRepository partyRepo;
     private final PartyMemberRepository partyMemberRepo;
+    private final MoneyService moneyService;
 
     public Boolean checkLeader(PartyMember partyMember) {
         return partyMember.isLeader();
@@ -125,5 +128,14 @@ public class PartyMemberService {
   
     public int countMembers(Party party) {
         return memberRepo.findByParty(party).size();
+    }
+
+    @Transactional
+    public void refundByPartyDelete(Party party) {
+        List<PartyMember> partyMembers = partyMemberRepo.findByParty(party);
+        for (PartyMember member : partyMembers) {
+            String userId = member.getUser().getUserId();
+            moneyService.refund(userId, member);
+        }
     }
 }
