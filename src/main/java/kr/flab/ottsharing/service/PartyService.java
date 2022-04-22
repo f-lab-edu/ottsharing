@@ -79,15 +79,8 @@ public class PartyService {
             throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
         }
 
-        boolean refundComplete = memberService.refundByPartyDelete(party);
-        
-        if(refundComplete) {
-            memberRepo.deleteAllByParty(party);
-            partyRepo.deleteById(partyId);
-            return PartyDeleteResult.SUCCESS;
-        }
-
-        return PartyDeleteResult.FAILED;
+        memberService.refundByPartyDelete(party);
+        return PartyDeleteResult.SUCCESS;
     }
     
     @Transactional

@@ -132,22 +132,11 @@ public class PartyMemberService {
     }
 
     @Transactional
-    public boolean refundByPartyDelete(Party party) {
+    public void refundByPartyDelete(Party party) {
         List<PartyMember> partyMembers = partyMemberRepo.findByParty(party);
-        boolean result = false;
-        int checkCnt = 0;
         for (PartyMember member : partyMembers) {
             String userId = member.getUser().getUserId();
-            RefundResult refundResult = moneyService.refund(userId, member);
-            if (refundResult.getStatus() == RefundResult.Status.SUCCESS) {
-                checkCnt++;
-            }
+            moneyService.refund(userId, member);
         }
-
-        if(checkCnt == countMembers(party)) {
-            result = true;
-        }
-
-        return result;
     }
 }
