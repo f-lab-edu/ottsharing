@@ -80,6 +80,8 @@ public class PartyService {
         }
 
         memberService.refundByPartyDelete(party);
+        memberRepo.deleteAllByParty(party);
+        partyRepo.deleteById(partyId);
         return PartyDeleteResult.SUCCESS;
     }
     
