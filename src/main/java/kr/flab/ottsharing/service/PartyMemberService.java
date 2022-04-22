@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PartyMemberService {
-    private final PartyService partyService;
     private final PartyMemberRepository memberRepo;
     private final PartyRepository partyRepo;
     private final PartyMemberRepository partyMemberRepo;
@@ -41,7 +40,17 @@ public class PartyMemberService {
             .build();
         memberRepo.save(member);
         
-        partyService.refreshIsFull(party);
+        refreshIsFull(party);
+    }
+
+    private void refreshIsFull(Party party) {
+        int count = countMembers(party);
+        if (count < 4) {
+            party.setFull(false);
+        } else {
+            party.setFull(true);
+        }
+        partyRepo.save(party);
     }
 
     public String changeInfoOfLeader(PartyMember partyMember, Party party, UpdatePartyInfo info) {

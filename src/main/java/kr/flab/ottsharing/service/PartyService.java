@@ -75,7 +75,7 @@ public class PartyService {
         refreshIsFull(party);
     }
 
-    public void refreshIsFull(Party party) {
+    private void refreshIsFull(Party party) {
         int count = memberService.countMembers(party);
         if (count < 4) {
             party.setFull(false);
