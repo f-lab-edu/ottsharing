@@ -46,7 +46,8 @@ public class PartyWaitingRepositoryTest {
         waitRepo.save(wait);
 
         // then
-        waitRepo.deleteByUser(user);
+        PartyWaiting waiting = waitRepo.findByUser(user).get();
+        waitRepo.delete(waiting);
         assertEquals(waitRepo.count(), 0);
     }
 

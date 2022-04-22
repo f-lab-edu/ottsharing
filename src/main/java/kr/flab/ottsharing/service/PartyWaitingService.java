@@ -29,7 +29,8 @@ public class PartyWaitingService {
   
     public DeleteWaitingResult deleteWaiting(String userId) {
       User user = userRepo.findByUserId(userId).get();
-      waitRepo.deleteByUser(user);
+      PartyWaiting waiting = waitRepo.findByUser(user).get();
+      waitRepo.delete(waiting);
       return DeleteWaitingResult.SUCCESS;
     }
     
