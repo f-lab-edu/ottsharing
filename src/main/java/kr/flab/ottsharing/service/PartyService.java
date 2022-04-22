@@ -170,12 +170,6 @@ public class PartyService {
     public String updatePartyInfo(String userId, UpdatePartyInfo info) {
         User user = userRepo.findByUserId(userId).get();
         PartyMember partyMember = memberRepo.findOneByUser(user).get();
-        Integer partyId = partyMember.getParty().getPartyId();
-        Integer writtenPartyId = info.getPartyId();
-
-        if(!partyId.equals(writtenPartyId)) {
-            throw new WrongInfoException("해당 파티에 속하지 않았습니다. 파티id를 다시 바르게 입력해주세요"  );
-        }
         
         if (memberService.checkLeader(partyMember)) {
             return memberService.changeInfoOfLeader(partyMember, partyMember.getParty(), info);
