@@ -1,6 +1,7 @@
 package kr.flab.ottsharing.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,7 @@ import kr.flab.ottsharing.entity.User;
 public interface PartyWaitingRepository extends JpaRepository<PartyWaiting, Integer> {
     boolean existsByUser(User user);
 
-    void deleteByUser(User user);
+    Optional<PartyWaiting> findByUser(User user);
 
     List<PartyWaiting> findTop3ByOrderByCreatedTimeAsc();
 
