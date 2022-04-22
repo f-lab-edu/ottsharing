@@ -75,6 +75,7 @@ public class MoneyService {
         int currentMonth = now.getMonthValue();
         int currentDate = now.getDayOfMonth();
 
+        Long payMoney = serviceFee;
         Long usingPeriod = 0L;
         Long month = 0L;
         Long usingMoney = 0L;
@@ -93,7 +94,7 @@ public class MoneyService {
         boolean saveMoney = false;
 
         if (isLeader) {
-            serviceFee -= 500L;
+            payMoney -= 500L;
         }
 
         if (isNowAfterPayDay) {
@@ -107,11 +108,11 @@ public class MoneyService {
             usingPeriod = ChronoUnit.DAYS.between(now, lastMonthPay);
         }
 
-        usingMoney = (serviceFee / month) * usingPeriod;
-        refundMoney = serviceFee - usingMoney;
+        usingMoney = (payMoney / month) * usingPeriod;
+        refundMoney = payMoney - usingMoney;
 
         if (payDate == currentDate) {
-            refundMoney = serviceFee;
+            refundMoney = payMoney;
         }
 
         if (!saveMoney) {
