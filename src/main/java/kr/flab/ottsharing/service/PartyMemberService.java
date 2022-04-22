@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PartyMemberService {
     private final PartyMemberRepository memberRepo;
-
     private final PartyRepository partyRepo;
     private final PartyMemberRepository partyMemberRepo;
     private final MoneyService moneyService;
@@ -32,7 +31,7 @@ public class PartyMemberService {
         return partyMember.getParty();
     }
 
-    public void join(Party party, User user) {
+    public void joinAfterPay(Party party, User user) {
         PartyMember member = PartyMember.builder()
             .user(user)
             .nickname(user.getUserId())
@@ -40,6 +39,18 @@ public class PartyMemberService {
             .party(party)
             .build();
         memberRepo.save(member);
+        
+        refreshIsFull(party);
+    }
+
+    private void refreshIsFull(Party party) {
+        int count = countMembers(party);
+        if (count < 4) {
+            party.setFull(false);
+        } else {
+            party.setFull(true);
+        }
+        partyRepo.save(party);
     }
 
     public String changeInfoOfLeader(PartyMember partyMember, Party party, UpdatePartyInfo info) {
