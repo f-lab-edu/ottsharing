@@ -186,29 +186,4 @@ public class PartyService {
         }
         return Optional.of(parties.get(0));
     }
-
-    // 추후 변경해야 할 코드
-    public boolean makeFull(Party party) {
-/*
-        party.setFull(true);
-        partyRepo.save(party);
-*/
-        return true;
-    }
-
-    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
-    public List<Party> pickParty() {
-        /*
-        List<Party> notFullParties = (List<Party>) partyRepo.findByIsFullFalse();
-        return notFullParties;
-         */
-        return null;
-    }
-
-    // Party Repository 구조 변경으로 인해 동작하지 않는 코드
-    public void getInParty(String userId, Party pickParty){
-        /*User userToJoin = userRepo.getById(userId);
-        PartyMember member = PartyMember.builder().user(userToJoin).party(pickParty).build();
-        memberRepo.save(member);*/
-    }
 }
