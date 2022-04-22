@@ -132,7 +132,7 @@ public class PartyMemberService {
     }
 
     @Transactional
-    public Boolean refundByPartyDelete(Party party) {
+    public boolean refundByPartyDelete(Party party) {
         List<PartyMember> partyMembers = partyMemberRepo.findByParty(party);
         boolean result = false;
         int checkCnt = 0;
