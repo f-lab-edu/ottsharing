@@ -73,7 +73,7 @@ public class MoneyService {
         User user = userRepository.findByUserId(userId).get();
         int payDate = filterRefundDate(user.getCreatedTime().getDayOfMonth());
 
-        if(!memberRepository.findOneByUser(user).isPresent() || partyMember == null) {
+        if(memberRepository.findOneByUser(user) == null || partyMember == null) {
             throw new WrongInfoException("환불 대상자가 아닙니다.");
         }
          
@@ -84,7 +84,7 @@ public class MoneyService {
         LocalDate thisMonthPay = LocalDate.of(currentYear, currentMonth, payDate);
         LocalDate lastMonthPay = thisMonthPay.minusMonths(1);
         LocalDate nextMonthPay = thisMonthPay.plusMonths(1);
-        Long payMoney = checkDisCount(serviceFee,partyMember);
+        Long payMoney = applyLeaderDiscount(serviceFee,partyMember);
         Long usingPeriod = ChronoUnit.DAYS.between(now, lastMonthPay);
         Long month = ChronoUnit.DAYS.between(thisMonthPay, lastMonthPay);
 
@@ -105,7 +105,7 @@ public class MoneyService {
         return new RefundResult(refundMoney);
     }
 
-    public Long checkDisCount(Long fee, PartyMember partyMember) {
+    public Long applyLeaderDiscount(Long fee, PartyMember partyMember) {
         if(partyMember.isLeader()) {
             return fee - 500L;
         }
