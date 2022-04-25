@@ -5,11 +5,11 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
+import kr.flab.ottsharing.dto.response.MyInfo;
+import kr.flab.ottsharing.dto.response.MyPageUpdateResult;
+import kr.flab.ottsharing.dto.response.RegisterResult;
+import kr.flab.ottsharing.dto.response.UserDeleteResult;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.protocol.MyInfo;
-import kr.flab.ottsharing.protocol.MyPageUpdateResult;
-import kr.flab.ottsharing.protocol.RegisterResult;
-import kr.flab.ottsharing.protocol.UserDeleteResult;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -6,11 +6,11 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import kr.flab.ottsharing.dto.response.UpdatePartyInfo;
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.WrongInfoException;
-import kr.flab.ottsharing.protocol.UpdatePartyInfo;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;

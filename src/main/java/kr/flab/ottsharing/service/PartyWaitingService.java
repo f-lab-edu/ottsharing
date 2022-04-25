@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import kr.flab.ottsharing.dto.response.DeleteWaitingResult;
 import kr.flab.ottsharing.entity.PartyWaiting;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.protocol.DeleteWaitingResult;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import kr.flab.ottsharing.protocol.RegisterResult;
+import kr.flab.ottsharing.dto.response.RegisterResult;
 import kr.flab.ottsharing.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)

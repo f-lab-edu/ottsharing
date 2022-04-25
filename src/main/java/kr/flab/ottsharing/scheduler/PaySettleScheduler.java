@@ -7,10 +7,10 @@ import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import kr.flab.ottsharing.dto.response.PayResult;
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.protocol.PayResult;
 import kr.flab.ottsharing.service.MoneyService;
 import kr.flab.ottsharing.service.PartyMemberService;
 import kr.flab.ottsharing.service.PartyService;

@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.flab.ottsharing.protocol.MyParty;
-import kr.flab.ottsharing.protocol.PartyCreateResult;
-import kr.flab.ottsharing.protocol.PartyDeleteResult;
-import kr.flab.ottsharing.protocol.PartyJoinResult;
-import kr.flab.ottsharing.protocol.UpdatePartyInfo;
+import kr.flab.ottsharing.dto.response.MyParty;
+import kr.flab.ottsharing.dto.response.PartyCreateResult;
+import kr.flab.ottsharing.dto.response.PartyDeleteResult;
+import kr.flab.ottsharing.dto.response.PartyJoinResult;
+import kr.flab.ottsharing.dto.response.UpdatePartyInfo;
 import kr.flab.ottsharing.service.PartyService;
 import lombok.RequiredArgsConstructor;
 

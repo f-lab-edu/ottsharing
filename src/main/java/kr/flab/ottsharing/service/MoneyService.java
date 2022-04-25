@@ -8,11 +8,11 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import kr.flab.ottsharing.dto.response.PayResult;
+import kr.flab.ottsharing.dto.response.RefundResult;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.MoneyException;
-import kr.flab.ottsharing.protocol.PayResult;
-import kr.flab.ottsharing.protocol.RefundResult;
 import kr.flab.ottsharing.repository.MoneyRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

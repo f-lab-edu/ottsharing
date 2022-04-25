@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.flab.ottsharing.protocol.DeleteWaitingResult;
+import kr.flab.ottsharing.dto.response.DeleteWaitingResult;
 import kr.flab.ottsharing.service.PartyWaitingService;
 import lombok.RequiredArgsConstructor;
 

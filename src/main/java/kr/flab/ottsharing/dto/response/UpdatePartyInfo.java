@@ -1,4 +1,4 @@
-package kr.flab.ottsharing.protocol;
+package kr.flab.ottsharing.dto.response;
 
 import org.springframework.lang.Nullable;
 

@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.flab.ottsharing.dto.response.MyInfo;
+import kr.flab.ottsharing.dto.response.MyPageUpdateResult;
+import kr.flab.ottsharing.dto.response.RegisterResult;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.protocol.MyInfo;
-import kr.flab.ottsharing.protocol.MyPageUpdateResult;
-import kr.flab.ottsharing.protocol.RegisterResult;
 import kr.flab.ottsharing.service.UserService;
 import lombok.RequiredArgsConstructor;
 
