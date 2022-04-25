@@ -9,13 +9,13 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import kr.flab.ottsharing.dto.request.PartyUpdateDto;
 import kr.flab.ottsharing.dto.response.MyParty;
 import kr.flab.ottsharing.dto.response.PartyCreateResult;
 import kr.flab.ottsharing.dto.response.PartyDeleteResult;
 import kr.flab.ottsharing.dto.response.PartyJoinResult;
 import kr.flab.ottsharing.dto.response.PartyMemberInfo;
 import kr.flab.ottsharing.dto.response.PayResult;
-import kr.flab.ottsharing.dto.response.UpdatePartyInfo;
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
@@ -92,13 +92,13 @@ public class PartyService {
             throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
         }
         User presentUser = user.get();
-        PartyMember partymember = memberRepo.findOneByUser(presentUser).get();
+        PartyMember partyMember = memberRepo.findOneByUser(presentUser).get();
 
-        if (!memberService.checkLeader(partymember)) {
+        if (!memberService.checkLeader(partyMember)) {
             throw new WrongInfoException("삭제 권한이 없습니다" + userId );
         }
 
-        Party party = memberService.getParty(partymember);
+        Party party = memberService.getParty(partyMember);
 
         if (!party.getPartyId().equals(partyId)) {
             throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
@@ -167,7 +167,7 @@ public class PartyService {
         return new MyParty(MyParty.Status.HAS_NO_PARTY);
     }
 
-    public String updatePartyInfo(String userId, UpdatePartyInfo info) {
+    public String updatePartyInfo(String userId, PartyUpdateDto info) {
         User user = userRepo.findByUserId(userId).get();
         PartyMember partyMember = memberRepo.findOneByUser(user).get();
         

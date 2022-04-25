@@ -1,11 +1,11 @@
-package kr.flab.ottsharing.dto.response;
+package kr.flab.ottsharing.dto.request;
 
 import org.springframework.lang.Nullable;
 
 import lombok.Getter;
 
 @Getter
-public class UpdatePartyInfo {
+public class PartyUpdateDto {
     @Nullable
     private String ottId;
 

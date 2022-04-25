@@ -6,7 +6,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import kr.flab.ottsharing.dto.response.UpdatePartyInfo;
+import kr.flab.ottsharing.dto.request.PartyUpdateDto;
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
@@ -53,7 +53,7 @@ public class PartyMemberService {
         partyRepo.save(party);
     }
 
-    public String changeInfoOfLeader(PartyMember partyMember, Party party, UpdatePartyInfo info) {
+    public String changeInfoOfLeader(PartyMember partyMember, Party party, PartyUpdateDto info) {
         boolean hasNickname = false;
         boolean hasOttId = false;
         boolean hasOttPassword = false;
@@ -101,7 +101,7 @@ public class PartyMemberService {
         return "리더의 요청으로 파티 정보 수정 완료되었습니다.";
     }
 
-    public String changeInfoOfMember(PartyMember partyMember, Party party, UpdatePartyInfo info) {
+    public String changeInfoOfMember(PartyMember partyMember, Party party, PartyUpdateDto info) {
         String nickname = info.getNicknameToChange();
         String ottId = info.getOttId();
         String ottPassword = info.getOttPassword();

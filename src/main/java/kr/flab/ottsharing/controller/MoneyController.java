@@ -19,6 +19,7 @@ public class MoneyController {
     @PostMapping("/charge")
     public String chargeMoney(@CookieValue(name = "userId") String userId, @RequestBody MoneyDto chargeDto) {
         return moneyService.charge(userId, chargeDto.getAmount());
+        
     }
 
     @PostMapping("/withdraw")
