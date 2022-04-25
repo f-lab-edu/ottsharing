@@ -1,7 +1,5 @@
 package kr.flab.ottsharing.controller;
 
-import java.util.Map;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.flab.ottsharing.dto.request.LoginDto;
+import kr.flab.ottsharing.dto.request.RegisterDto;
+import kr.flab.ottsharing.dto.request.UserUpdateDto;
 import kr.flab.ottsharing.dto.response.MyInfo;
 import kr.flab.ottsharing.dto.response.MyPageUpdateResult;
 import kr.flab.ottsharing.dto.response.RegisterResult;
@@ -27,8 +28,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> request, HttpServletResponse response){
-        String userId = request.get("userId");
+    public String login(@RequestBody LoginDto loginDto, HttpServletResponse response){
+        String userId = loginDto.getUserId();
         User user = userService.login(userId);
         if (user == null) {
             return "로그인 실패";
@@ -50,10 +51,10 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public RegisterResult register(@RequestBody Map<String, String> req) {
-        String userId = req.get("userId");
-        String userPassword = req.get("userPassword");
-        String email = req.get("email");
+    public RegisterResult register(@RequestBody RegisterDto registerDto) {
+        String userId = registerDto.getUserId();
+        String userPassword = registerDto.getUserPassword();
+        String email = registerDto.getEmail();
 
         return userService.register(userId, userPassword, email);
     }
@@ -64,9 +65,9 @@ public class UserController {
     }
 
     @PutMapping("/myPage")
-    public MyPageUpdateResult changeMyInfo(@CookieValue(name = "userId") String userId, @RequestBody Map<String, String> request) {
-        String password = request.get("password");
-        String email = request.get("email");
+    public MyPageUpdateResult changeMyInfo(@CookieValue(name = "userId") String userId, @RequestBody UserUpdateDto updateDto) {
+        String password = updateDto.getPassword();
+        String email = updateDto.getEmail();
 
         return userService.updateMyInfo(userId, password, email);
     }
