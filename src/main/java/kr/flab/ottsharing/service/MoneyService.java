@@ -73,7 +73,7 @@ public class MoneyService {
         User user = userRepository.findByUserId(userId).get();
         int payDate = filterRefundDate(user.getCreatedTime().getDayOfMonth());
 
-        if(memberRepository.findOneByUser(user) == null || partyMember == null) {
+        if(memberRepository.findOneByUser(user).isEmpty()) {
             throw new WrongInfoException("환불 대상자가 아닙니다.");
         }
          
