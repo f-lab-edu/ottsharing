@@ -54,47 +54,22 @@ public class PartyMemberService {
     }
 
     public String changeInfoOfLeader(PartyMember partyMember, Party party, UpdatePartyInfo info) {
-        boolean hasNickname = false;
-        boolean hasOttId = false;
-        boolean hasOttPassword = false;
-        boolean saveParty = false;
-        String nickname = info.getNicknameToChange();
-        String ottId = info.getOttId();
-        String ottPassword = info.getOttPassword();
-
-        if (info.getNicknameToChange() != null) {
-            hasNickname = true;
-        }
-
-        if (info.getOttId() != null) {
-            hasOttId = true;
-        }
-
-        if (info.getOttPassword() != null) {
-            hasOttPassword = true;
-        }
-
-        if (!hasNickname && !hasOttId && !hasOttPassword) {
-            throw new WrongInfoException("바꿀 정보가 아무것도 입력되지 않았습니다.");
-        }
         
-        if (hasNickname) {
-            checkNickNameDuplicate(party, nickname);
-            partyMember.setNickname(nickname);
+        if (info.existNickName()) {
+            checkNickNameDuplicate(party, info.getNicknameToChange());
+            partyMember.setNickname(info.getNicknameToChange());
             partyMemberRepo.save(partyMember);
         }
 
-        if (hasOttId) {
-            party.setOttId(ottId);
-            saveParty = true;
+        if (info.existId()) {
+            party.setOttId(info.getOttId());
         }
 
-        if (hasOttPassword) {
-            party.setOttPassword(ottPassword);
-            saveParty = true;
+        if (info.existPassword()) {
+            party.setOttPassword(info.getOttPassword());
         }
 
-        if(saveParty == true) {
+        if (info.existIdOrPassword()) {
             partyRepo.save(party);
         }
         
@@ -102,20 +77,17 @@ public class PartyMemberService {
     }
 
     public String changeInfoOfMember(PartyMember partyMember, Party party, UpdatePartyInfo info) {
-        String nickname = info.getNicknameToChange();
-        String ottId = info.getOttId();
-        String ottPassword = info.getOttPassword();
 
-        if (ottId != null || ottPassword != null) {
-            throw new WrongInfoException("팀원은 파티의 아이디 또는 패스워드를 수정할 수 없습니다. ");
+        if (info.existIdOrPassword()) {
+            throw new WrongInfoException("팀원은 파티의 아이디 또는 패스워드를 수정할 수 없습니다.");
         }
 
-        if (nickname == null) {
-            throw new WrongInfoException("바꿀 닉네임을 적어줘야 합니다." + nickname);
+        if (!info.existNickName()) {
+            throw new WrongInfoException("바꿀 닉네임을 적어줘야 합니다." + info.getNicknameToChange());
         }
 
-        checkNickNameDuplicate(party, nickname);
-        partyMember.setNickname(nickname);
+        checkNickNameDuplicate(party, info.getNicknameToChange());
+        partyMember.setNickname(info.getNicknameToChange());
         partyMemberRepo.save(partyMember);
         
         return "닉네임 수정 완료되었습니다.";
