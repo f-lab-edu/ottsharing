@@ -9,7 +9,6 @@ import kr.flab.ottsharing.dto.response.MyInfo;
 import kr.flab.ottsharing.dto.response.common.CommonResponse;
 import kr.flab.ottsharing.dto.response.common.ResultCode;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final PartyMemberRepository partyMemberRepository;
 
     private final Pattern VALID_EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
     private final int PASSWORD_MIN_LENGTH = 8;

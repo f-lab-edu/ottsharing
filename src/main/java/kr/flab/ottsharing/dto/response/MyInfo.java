@@ -1,7 +1,6 @@
 package kr.flab.ottsharing.dto.response;
 
 import kr.flab.ottsharing.dto.response.common.CommonResponse;
-import kr.flab.ottsharing.dto.response.common.ResultCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
