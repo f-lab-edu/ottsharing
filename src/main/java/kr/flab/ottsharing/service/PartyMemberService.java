@@ -83,22 +83,18 @@ public class PartyMemberService {
     }
 
     public CommonResponse changeInfoOfMember(PartyMember partyMember, Party party, PartyUpdateDto info) {
-        String nickname = info.getNicknameToChange();
-        String ottId = info.getOttId();
-        String ottPassword = info.getOttPassword();
-
-        if (ottId != null || ottPassword != null) {
+        if (info.existIdOrPassword()) {
             return new CommonResponse(ResultCode.LEADER_ONLY);
         }
 
-        if (nickname == null) {
+        if (!info.existNickName()) {
             return new CommonResponse(ResultCode.NOTHING_CHANGED);
         }
 
-        if (isDuplicatedNickname(party, nickname)) {
+        if (isDuplicatedNickname(party, info.getNicknameToChange())) {
             return new CommonResponse(ResultCode.DUPLICATED_NICKNAME);
         }
-        partyMember.setNickname(nickname);
+        partyMember.setNickname(info.getNicknameToChange());
         partyMemberRepo.save(partyMember);
         
         return new CommonResponse();
