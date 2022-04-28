@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
 import kr.flab.ottsharing.exception.MoneyException;
+import kr.flab.ottsharing.exception.WrongInfoException;
 import kr.flab.ottsharing.protocol.PayResult;
 import kr.flab.ottsharing.protocol.RefundResult;
 import kr.flab.ottsharing.repository.MoneyRepository;
+import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +25,7 @@ public class MoneyService {
     
     private final MoneyRepository moneyRepo;
     private final UserRepository userRepository;
+    private final PartyMemberRepository memberRepository;
 
     @Value("${ottsharing.serviceFee}")
     private Long serviceFee;
@@ -68,60 +71,52 @@ public class MoneyService {
     @Transactional
     public RefundResult refund(String userId, PartyMember partyMember) {
         User user = userRepository.findByUserId(userId).get();
-        int payDate = user.getCreatedTime().getDayOfMonth();
-     
+        int payDate = filterRefundDate(user.getCreatedTime().getDayOfMonth());
+
+        if(memberRepository.findOneByUser(user).isEmpty()) {
+            throw new WrongInfoException("환불 대상자가 아닙니다.");
+        }
+         
         LocalDate now = LocalDate.now();
         int currentYear = now.getYear();
         int currentMonth = now.getMonthValue();
         int currentDate = now.getDayOfMonth();
-
-        Long payMoney = serviceFee;
-        Long usingPeriod = 0L;
-        Long month = 0L;
-        Long usingMoney = 0L;
-        Long refundMoney = 0L;
-
-        if (payDate == 29 || payDate == 30 || payDate == 31) {
-            payDate = 28;
-        }
-
         LocalDate thisMonthPay = LocalDate.of(currentYear, currentMonth, payDate);
         LocalDate lastMonthPay = thisMonthPay.minusMonths(1);
         LocalDate nextMonthPay = thisMonthPay.plusMonths(1);
+        Long payMoney = applyLeaderDiscount(serviceFee,partyMember);
+        Long usingPeriod = ChronoUnit.DAYS.between(now, lastMonthPay);
+        Long month = ChronoUnit.DAYS.between(thisMonthPay, lastMonthPay);
 
-        boolean isNowAfterPayDay = now.isAfter(thisMonthPay);
-        boolean isLeader = partyMember.isLeader();
-        boolean saveMoney = false;
-
-        if (isLeader) {
-            payMoney -= 500L;
-        }
-
-        if (isNowAfterPayDay) {
+        if (now.isAfter(thisMonthPay)) {
             month = ChronoUnit.DAYS.between(nextMonthPay, thisMonthPay);
             usingPeriod = ChronoUnit.DAYS.between(now, thisMonthPay);
-            
         }
 
-        if (!isNowAfterPayDay) {
-            month = ChronoUnit.DAYS.between(thisMonthPay, lastMonthPay);
-            usingPeriod = ChronoUnit.DAYS.between(now, lastMonthPay);
-        }
-
-        usingMoney = (payMoney / month) * usingPeriod;
-        refundMoney = payMoney - usingMoney;
+        Long refundMoney = payMoney - (payMoney / month) * usingPeriod;
 
         if (payDate == currentDate) {
             refundMoney = payMoney;
         }
 
-        if (!saveMoney) {
-            user.setMoney(user.getMoney() + refundMoney);
-            moneyRepo.save(user);
-            saveMoney = true;
-        }
+        user.setMoney(user.getMoney() + refundMoney);
+        moneyRepo.save(user);
         
         return new RefundResult(refundMoney);
+    }
+
+    public Long applyLeaderDiscount(Long fee, PartyMember partyMember) {
+        if(partyMember.isLeader()) {
+            return fee - 500L;
+        }
+        return fee;
+    }
+
+    public int filterRefundDate(int date) {
+        if(date >= 29) {
+            return 28;
+        }
+        return date;
     }
 
 }
