@@ -22,37 +22,22 @@ public class PartyUpdateDto {
     }
 
     public boolean checkAllBlank() {
-        if (ottId == null && ottPassword == null && nicknameToChange == null ) {
-            return true;
-        }
-        return false;
+        return ottId == null && ottPassword == null && nicknameToChange == null;
     }
 
     public boolean existId() {
-        if (ottId == null) {
-            return false;
-        }
-        return true;
+        return ottId != null;
     }
 
     public boolean existPassword() {
-        if (ottPassword == null) {
-            return false;
-        }
-        return true;
+        return ottPassword != null;
     }
 
     public boolean existNickName() {
-        if (nicknameToChange == null) {
-            return false;
-        }
-        return true;
+        return nicknameToChange != null;
     }
 
     public boolean existIdOrPassword() {
-        if (ottId != null || ottPassword != null) {
-            return true;
-        }
-        return false;
+        return ottId != null || ottPassword != null;
     }
 }
