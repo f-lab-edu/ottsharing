@@ -74,7 +74,7 @@ public class MoneyService {
         int payDate = filterRefundDate(user.getCreatedTime().getDayOfMonth());
 
         if(memberRepository.findOneByUser(user).isEmpty()) {
-            throw new WrongInfoException("환불 대상자가 아닙니다.");
+            return new RefundResult(ResultCode.HAS_NO_PARTY);
         }
          
         LocalDate now = LocalDate.now();
