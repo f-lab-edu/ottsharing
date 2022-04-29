@@ -13,9 +13,7 @@ import kr.flab.ottsharing.dto.request.PartyCreateDto;
 import kr.flab.ottsharing.dto.request.PartyIdDto;
 import kr.flab.ottsharing.dto.request.PartyUpdateDto;
 import kr.flab.ottsharing.dto.response.MyParty;
-import kr.flab.ottsharing.dto.response.PartyCreateResult;
-import kr.flab.ottsharing.dto.response.PartyDeleteResult;
-import kr.flab.ottsharing.dto.response.PartyJoinResult;
+import kr.flab.ottsharing.dto.response.common.CommonResponse;
 import kr.flab.ottsharing.service.PartyService;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +23,7 @@ public class PartyController {
     private final PartyService partyServ;
 
     @PostMapping("/party/create")
-    public PartyCreateResult create(@CookieValue(name = "userId") String userId, @RequestBody PartyCreateDto createDto) {
+    public CommonResponse create(@CookieValue(name = "userId") String userId, @RequestBody PartyCreateDto createDto) {
         return partyServ.create(userId, createDto.getOttId(), createDto.getOttPassword());
     }
 
@@ -35,22 +33,22 @@ public class PartyController {
     }
 
     @PostMapping("/party/join")
-    public PartyJoinResult joinParty(@CookieValue(name = "userId") String userId) {
+    public CommonResponse joinParty(@CookieValue(name = "userId") String userId) {
         return partyServ.join(userId);
     }
 
     @DeleteMapping("/party/deleteParty")
-    public PartyDeleteResult deleteParty(@CookieValue(name = "userId") String userId, @RequestBody PartyIdDto partyIdDto) {
+    public CommonResponse deleteParty(@CookieValue(name = "userId") String userId, @RequestBody PartyIdDto partyIdDto) {
         return partyServ.deleteParty(userId, partyIdDto.getPartyId());
     }
 
     @DeleteMapping("/party/getOutParty")
-    public String getOutParty(@CookieValue(name = "userId") String userId, @RequestBody PartyIdDto partyIdDto) {
+    public CommonResponse getOutParty(@CookieValue(name = "userId") String userId, @RequestBody PartyIdDto partyIdDto) {
         return partyServ.getOutParty(userId, partyIdDto.getPartyId());
     }
 
     @PostMapping("/party/updatePartyInfo")
-    public String updatePartyInfo(@CookieValue(name = "userId") String userId, @Valid @RequestBody PartyUpdateDto info) {
+    public CommonResponse updatePartyInfo(@CookieValue(name = "userId") String userId, @Valid @RequestBody PartyUpdateDto info) {
         return partyServ.updatePartyInfo(userId, info);
     }
 }

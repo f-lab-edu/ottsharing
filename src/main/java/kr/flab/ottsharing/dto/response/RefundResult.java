@@ -1,17 +1,15 @@
 package kr.flab.ottsharing.dto.response;
 
+import kr.flab.ottsharing.dto.response.common.CommonResponse;
+import kr.flab.ottsharing.dto.response.common.ResultCode;
 import lombok.Getter;
 
 @Getter
-public class RefundResult {
-    
-    private Status status;
+public class RefundResult extends CommonResponse {
     private Long refundMoney;
 
     public RefundResult(Long refundMoney) {
-        this.status = Status.SUCCESS;
+        resultCode = ResultCode.SUCCESS;
         this.refundMoney = refundMoney;
     }
-
-    public enum Status { SUCCESS }
 }

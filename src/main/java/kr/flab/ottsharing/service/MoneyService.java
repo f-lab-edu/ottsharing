@@ -8,11 +8,11 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import kr.flab.ottsharing.dto.response.PayResult;
 import kr.flab.ottsharing.dto.response.RefundResult;
+import kr.flab.ottsharing.dto.response.common.CommonResponse;
+import kr.flab.ottsharing.dto.response.common.ResultCode;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.exception.MoneyException;
 import kr.flab.ottsharing.repository.MoneyRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,42 +27,43 @@ public class MoneyService {
     @Value("${ottsharing.serviceFee}")
     private Long serviceFee;
 
-    public void settle(User user, int amount) {
+    public ResultCode settle(User user, int amount) {
         user.setMoney(user.getMoney() + amount);
         moneyRepo.save(user);
+        return ResultCode.SUCCESS;
     }
 
     @Transactional
-    public PayResult pay(User user, int amount) {
+    public ResultCode pay(User user, int amount) {
         if (user.getMoney() < amount) {
-            return PayResult.NOT_ENOUGH_MONEY;
+            return ResultCode.NOT_ENOUGH_MONEY;
         }
 
         user.setMoney(user.getMoney() - amount);
         moneyRepo.save(user);
 
-        return PayResult.SUCCESS;
+        return ResultCode.SUCCESS;
     }
 
-    public String charge(String userId, int moneyToCharge) {
-
+    public CommonResponse charge(String userId, int moneyToCharge) {
         User user = userRepository.findByUserId(userId).get();
         user.setMoney(user.getMoney()+ moneyToCharge);
         moneyRepo.save(user);
 
-        return "충전 완료되었습니다";
+        return new CommonResponse();
     }
 
     @Transactional
-    public String withdraw(String userId, int moneyToWithdraw) {
+    public CommonResponse withdraw(String userId, int moneyToWithdraw) {
         User user = userRepository.findByUserId(userId).get();
         if (user.getMoney() < moneyToWithdraw) {
-            throw new MoneyException("현재 돈이 부족합니다.");
+            return new CommonResponse(ResultCode.NOT_ENOUGH_MONEY);
         }
 
         user.setMoney(user.getMoney() - moneyToWithdraw);
         moneyRepo.save(user);
-        return "출금 완료되었습니다";
+
+        return new CommonResponse();
     }
 
     @Transactional
