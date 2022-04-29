@@ -39,7 +39,7 @@ public class PartyService {
     @Value("${ottsharing.serviceFee}")
     private int serviceFee;
 
-    @CacheEvict(value = "myParty", key = "#userId")
+    @CacheEvict(value = "myParty", key = "#leaderId")
     public CommonResponse create(String leaderId, String ottId, String ottPassword) {
         User leader = userRepo.findByUserId(leaderId).get();
 
