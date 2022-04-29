@@ -12,4 +12,8 @@ public class RefundResult extends CommonResponse {
         resultCode = ResultCode.SUCCESS;
         this.refundMoney = refundMoney;
     }
+    
+    public RefundResult(ResultCode resultCode) {
+        this.resultCode = resultCode;
+    }
 }
