@@ -55,49 +55,27 @@ public class PartyMemberService {
     }
 
     public CommonResponse changeInfoOfLeader(PartyMember partyMember, Party party, PartyUpdateDto info) {
-        boolean hasNickname = false;
-        boolean hasOttId = false;
-        boolean hasOttPassword = false;
-        boolean saveParty = false;
-        String nickname = info.getNicknameToChange();
-        String ottId = info.getOttId();
-        String ottPassword = info.getOttPassword();
-
-        if (info.getNicknameToChange() != null) {
-            hasNickname = true;
-        }
-
-        if (info.getOttId() != null) {
-            hasOttId = true;
-        }
-
-        if (info.getOttPassword() != null) {
-            hasOttPassword = true;
-        }
-
-        if (!hasNickname && !hasOttId && !hasOttPassword) {
+        if (info.checkAllBlank()) {
             return new CommonResponse(ResultCode.NOTHING_CHANGED);
         }
-        
-        if (hasNickname) {
-            if (isDuplicatedNickname(party, nickname)) {
+
+        if (info.existNickName()) {
+            if (isDuplicatedNickname(party, info.getNicknameToChange())) {
                 return new CommonResponse(ResultCode.DUPLICATED_NICKNAME);
             }
-            partyMember.setNickname(nickname);
+            partyMember.setNickname(info.getNicknameToChange());
             partyMemberRepo.save(partyMember);
         }
 
-        if (hasOttId) {
-            party.setOttId(ottId);
-            saveParty = true;
+        if (info.existId()) {
+            party.setOttId(info.getOttId());
         }
 
-        if (hasOttPassword) {
-            party.setOttPassword(ottPassword);
-            saveParty = true;
+        if (info.existPassword()) {
+            party.setOttPassword(info.getOttPassword());
         }
 
-        if(saveParty == true) {
+        if (info.existIdOrPassword()) {
             partyRepo.save(party);
         }
         
@@ -105,22 +83,18 @@ public class PartyMemberService {
     }
 
     public CommonResponse changeInfoOfMember(PartyMember partyMember, Party party, PartyUpdateDto info) {
-        String nickname = info.getNicknameToChange();
-        String ottId = info.getOttId();
-        String ottPassword = info.getOttPassword();
-
-        if (ottId != null || ottPassword != null) {
+        if (info.existIdOrPassword()) {
             return new CommonResponse(ResultCode.LEADER_ONLY);
         }
 
-        if (nickname == null) {
+        if (!info.existNickName()) {
             return new CommonResponse(ResultCode.NOTHING_CHANGED);
         }
 
-        if (isDuplicatedNickname(party, nickname)) {
+        if (isDuplicatedNickname(party, info.getNicknameToChange())) {
             return new CommonResponse(ResultCode.DUPLICATED_NICKNAME);
         }
-        partyMember.setNickname(nickname);
+        partyMember.setNickname(info.getNicknameToChange());
         partyMemberRepo.save(partyMember);
         
         return new CommonResponse();
