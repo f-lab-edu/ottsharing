@@ -9,17 +9,14 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import kr.flab.ottsharing.dto.request.PartyUpdateDto;
+import kr.flab.ottsharing.dto.response.MyParty;
+import kr.flab.ottsharing.dto.response.PartyMemberInfo;
+import kr.flab.ottsharing.dto.response.common.CommonResponse;
+import kr.flab.ottsharing.dto.response.common.ResultCode;
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.exception.WrongInfoException;
-import kr.flab.ottsharing.protocol.MyParty;
-import kr.flab.ottsharing.protocol.PartyCreateResult;
-import kr.flab.ottsharing.protocol.PartyDeleteResult;
-import kr.flab.ottsharing.protocol.PartyMemberInfo;
-import kr.flab.ottsharing.protocol.PartyJoinResult;
-import kr.flab.ottsharing.protocol.PayResult;
-import kr.flab.ottsharing.protocol.UpdatePartyInfo;
 import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.PartyRepository;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
@@ -40,12 +37,12 @@ public class PartyService {
     @Value("${ottsharing.serviceFee}")
     private int serviceFee;
 
-    public PartyCreateResult create(String leaderId, String ottId, String ottPassword) {
+    public CommonResponse create(String leaderId, String ottId, String ottPassword) {
         User leader = userRepo.findByUserId(leaderId).get();
 
-        PayResult payResult = moneyService.pay(leader, serviceFee - 500);
-        if (payResult == PayResult.NOT_ENOUGH_MONEY) {
-            return PartyCreateResult.NOT_ENOUGH_MONEY; 
+        ResultCode payResult = moneyService.pay(leader, serviceFee - 500);
+        if (payResult == ResultCode.NOT_ENOUGH_MONEY) {
+            return new CommonResponse(ResultCode.NOT_ENOUGH_MONEY); 
         } 
 
         Party party = Party.builder()
@@ -63,7 +60,7 @@ public class PartyService {
         memberRepo.save(member);
 
         inviteMembersInWaiting(party);
-        return PartyCreateResult.SUCCESS;
+        return new CommonResponse();
     }
 
     private void inviteMembersInWaiting(Party party) {
@@ -86,49 +83,52 @@ public class PartyService {
     }
 
     @Transactional
-    public PartyDeleteResult deleteParty(String userId, Integer partyId) {
+    public CommonResponse deleteParty(String userId, Integer partyId) {
         Optional<User> user = userRepo.findByUserId(userId);
         if (!user.isPresent()) {
-            throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
+            return CommonResponse(ResultCode.NOT_EXIST_USER);
         }
         User presentUser = user.get();
-        PartyMember partymember = memberRepo.findOneByUser(presentUser).get();
-
-        if (!memberService.checkLeader(partymember)) {
-            throw new WrongInfoException("삭제 권한이 없습니다" + userId );
+        PartyMember partyMember = memberRepo.findOneByUser(presentUser).get();
+        
+        if (!memberService.checkLeader(partyMember)) {
+            return CommonResponse(ResultCode.LEADER_ONLY);
         }
-
-        Party party = memberService.getParty(partymember);
-
+        
+        Party party = memberService.getParty(partyMember);
         if (!party.getPartyId().equals(partyId)) {
-            throw new WrongInfoException("삭제 권한의 그룹이 아닙니다" + partyId );
+            return CommonResponse(ResultCode.IN_PARTY_ONLY);
         }
 
         memberService.refundByPartyDelete(party);
         memberRepo.deleteAllByParty(party);
         partyRepo.deleteById(partyId);
-        return PartyDeleteResult.SUCCESS;
+        return new CommonResponse();
     }
     
+    private CommonResponse CommonResponse(ResultCode notExistUser) {
+        return null;
+    }
+
     @Transactional
-    public String getOutParty(String userId, Integer partyId) {
+    public CommonResponse getOutParty(String userId, Integer partyId) {
         Optional<User> user = userRepo.findByUserId(userId);
 
         if (!user.isPresent()) {
-            throw new WrongInfoException("존재하지 않는 회원id를 입력했습니다" + userId );
+            return new CommonResponse(ResultCode.NOT_EXIST_USER);
         }
 
         User currentUser = user.get();
         PartyMember partyMember = memberRepo.findOneByUser(currentUser).get();
 
         if (memberService.checkLeader(partyMember)) {
-            throw new WrongInfoException("리더인 경우, 탈퇴가 아닌 파티해체 절차로 가주세요" + userId );
+            return new CommonResponse(ResultCode.PARTY_MEMBER_ONLY);
         }
 
         Party party = memberService.getParty(partyMember);
 
         if (!party.getPartyId().equals(partyId)) {
-            throw new WrongInfoException("탈퇴 권한의 그룹이 아닙니다" + partyId );
+            return new CommonResponse(ResultCode.IN_PARTY_ONLY);
         }
 
         memberRepo.deleteById(partyMember.getPartyMemberId());
@@ -136,7 +136,7 @@ public class PartyService {
         party.setFull(false);
         partyRepo.save(party);
 
-        return "파티 탈퇴 완료되었습니다";
+        return new CommonResponse();
     }
 
     public MyParty fetchMyParty(String userId) {
@@ -161,13 +161,13 @@ public class PartyService {
         }
 
         if (waitingRepo.existsByUser(user)) {
-            return new MyParty(MyParty.Status.WAITING_FOR_PARTY);
+            return new MyParty(ResultCode.ON_WAITING);
         }
 
-        return new MyParty(MyParty.Status.HAS_NO_PARTY);
+        return new MyParty(ResultCode.HAS_NO_PARTY);
     }
 
-    public String updatePartyInfo(String userId, UpdatePartyInfo info) {
+    public CommonResponse updatePartyInfo(String userId, PartyUpdateDto info) {
         User user = userRepo.findByUserId(userId).get();
         PartyMember partyMember = memberRepo.findOneByUser(user).get();
         
@@ -180,22 +180,22 @@ public class PartyService {
 
 
     @Transactional
-    public PartyJoinResult join(String userId) {
+    public CommonResponse join(String userId) {
         User user = userRepo.findByUserId(userId).get();
 
-        PayResult payResult = moneyService.pay(user, serviceFee);
-        if (payResult == PayResult.NOT_ENOUGH_MONEY) {
-            return PartyJoinResult.NOT_ENOUGH_MONEY; 
+        ResultCode payResult = moneyService.pay(user, serviceFee);
+        if (payResult == ResultCode.NOT_ENOUGH_MONEY) {
+            return new CommonResponse(ResultCode.NOT_ENOUGH_MONEY); 
         } 
         
         Optional<Party> anyNotFullParty = getAnyNotFullParty();
         if (anyNotFullParty.isEmpty()) {
             waitingService.addWaiting(user);
-            return PartyJoinResult.ON_WAITING;
+            return new CommonResponse(ResultCode.ON_WAITING); 
         }
 
         memberService.joinAfterPay(anyNotFullParty.get(), user);
-        return PartyJoinResult.SUCCESS;
+        return new CommonResponse(); 
     }
 
     private Optional<Party> getAnyNotFullParty() {

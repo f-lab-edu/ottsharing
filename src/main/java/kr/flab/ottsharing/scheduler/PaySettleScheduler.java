@@ -7,10 +7,10 @@ import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import kr.flab.ottsharing.dto.response.common.ResultCode;
 import kr.flab.ottsharing.entity.Party;
 import kr.flab.ottsharing.entity.PartyMember;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.protocol.PayResult;
 import kr.flab.ottsharing.service.MoneyService;
 import kr.flab.ottsharing.service.PartyMemberService;
 import kr.flab.ottsharing.service.PartyService;
@@ -39,8 +39,8 @@ public class PaySettleScheduler {
                 continue;
             }
 
-            PayResult payResult = moneyService.pay(user, 5000);
-            if (payResult == PayResult.NOT_ENOUGH_MONEY) {
+            ResultCode payResult = moneyService.pay(user, 5000);
+            if (payResult == ResultCode.NOT_ENOUGH_MONEY) {
                 partyService.getOutParty(user.getUserId(), party.getPartyId());
             }
         }

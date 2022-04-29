@@ -5,12 +5,10 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
+import kr.flab.ottsharing.dto.response.MyInfo;
+import kr.flab.ottsharing.dto.response.common.CommonResponse;
+import kr.flab.ottsharing.dto.response.common.ResultCode;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.protocol.MyInfo;
-import kr.flab.ottsharing.protocol.MyPageUpdateResult;
-import kr.flab.ottsharing.protocol.RegisterResult;
-import kr.flab.ottsharing.protocol.UserDeleteResult;
-import kr.flab.ottsharing.repository.PartyMemberRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -18,23 +16,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final PartyMemberRepository partyMemberRepository;
 
     private final Pattern VALID_EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
     private final int PASSWORD_MIN_LENGTH = 8;
 
-    public RegisterResult register(String userId, String userPassword, String email) {
+    public CommonResponse register(String userId, String userPassword, String email) {
         if (userRepository.existsByUserId(userId)) {
-            return RegisterResult.DUPLICATE_USER_ID;
+            return new CommonResponse(ResultCode.DUPLICATED_USER_ID);
         }
         if (userRepository.existsByEmail(email)) {
-            return RegisterResult.DUPLICATE_EMAIL;
+            return new CommonResponse(ResultCode.DUPLICATED_EMAIL);
         }
         if (isWeekPassword(userPassword)) {
-            return RegisterResult.WEAK_PASSWORD;
+            return new CommonResponse(ResultCode.WEAK_PASSWORD);
         }
         if (!isValidEmail(email)) {
-            return RegisterResult.INVALID_EMAIL;
+            return new CommonResponse(ResultCode.INVALID_EMAIL);
         }
 
         User user = User.builder()
@@ -45,7 +42,7 @@ public class UserService {
             .build();
 
         userRepository.save(user);
-        return RegisterResult.SUCCESS;
+        return new CommonResponse();
     }
 
     private boolean isWeekPassword(String password) {
@@ -86,25 +83,12 @@ public class UserService {
         return null;
     }
 
-    public UserDeleteResult deleteMyInfo(String userId) {
-        User user = userRepository.findByUserId(userId).get();
-        if (user.getMoney() > 0) {
-            return UserDeleteResult.HAS_MONEY;
-        }
-        if (partyMemberRepository.findOneByUser(user).isPresent()) {
-            return UserDeleteResult.HAS_PARTY;
-        }
-
-        userRepository.deleteById(user.getId());
-        return UserDeleteResult.SUCCESS;
-    }
-
     public MyInfo fetchMyInfo(String userId) {
         User user = userRepository.findByUserId(userId).get();
         return new MyInfo(userId, user.getEmail(), user.getMoney());
     }
 
-    public MyPageUpdateResult updateMyInfo(String userId, String changedPassword, String changedEmail) {
+    public CommonResponse updateMyInfo(String userId, String changedPassword, String changedEmail) {
         User user = userRepository.findByUserId(userId).get();
         String passwordBeforeChange = user.getUserPassword();
         String emailBeforeChange = user.getEmail();
@@ -129,14 +113,14 @@ public class UserService {
             }
         }
 
-        MyPageUpdateResult result = MyPageUpdateResult.NOTHING_CHANGED;
         if (emailProblem) {
             user.setUserPassword(passwordBeforeChange);
             userRepository.save(user);
-            result = MyPageUpdateResult.DUPLICATED_EMAIL;
-        } else if (isPasswordChange || isEmailChange) {
-            result = MyPageUpdateResult.CHANGE_COMPLETE;
+            return new CommonResponse(ResultCode.DUPLICATED_EMAIL);
         }
-        return result;
+        if (isPasswordChange || isEmailChange) {
+            return new CommonResponse(ResultCode.CHANGE_COMPLETE);
+        }
+        return new CommonResponse(ResultCode.NOTHING_CHANGED);
     }
 }

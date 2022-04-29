@@ -9,7 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import kr.flab.ottsharing.protocol.RegisterResult;
+import kr.flab.ottsharing.dto.response.common.CommonResponse;
+import kr.flab.ottsharing.dto.response.common.ResultCode;
 import kr.flab.ottsharing.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,10 +30,10 @@ public class UserServiceTest {
         String userId = "userId";
         String userPassword = "userPassword12";
         String email = "email@email.com";
-        RegisterResult result = userService.register(userId, userPassword, email);
+        CommonResponse result = userService.register(userId, userPassword, email);
 
         // then
-        assertEquals(RegisterResult.SUCCESS, result);
+        assertEquals(ResultCode.SUCCESS, result.resultCode);
     }
 
     @Test
@@ -44,10 +45,10 @@ public class UserServiceTest {
         String userId = "userId";
         String userPassword = "userPassword12";
         String email = "email@email.com";
-        RegisterResult result = userService.register(userId, userPassword, email);
+        CommonResponse result = userService.register(userId, userPassword, email);
 
         // then
-        assertEquals(RegisterResult.DUPLICATE_USER_ID, result);
+        assertEquals(ResultCode.DUPLICATED_USER_ID, result.resultCode);
     }
 
     @Test
@@ -59,10 +60,10 @@ public class UserServiceTest {
         String userId = "userId";
         String userPassword = "userPassword12";
         String email = "email@email.com";
-        RegisterResult result = userService.register(userId, userPassword, email);
+        CommonResponse result = userService.register(userId, userPassword, email);
 
         // then
-        assertEquals(RegisterResult.DUPLICATE_EMAIL, result);
+        assertEquals(ResultCode.DUPLICATED_EMAIL, result.resultCode);
     }
 
     @Test
@@ -71,10 +72,10 @@ public class UserServiceTest {
         String userId = "userId";
         String userPassword = "userPassword12";
         String email = "email";
-        RegisterResult result = userService.register(userId, userPassword, email);
+        CommonResponse result = userService.register(userId, userPassword, email);
 
         // then
-        assertEquals(RegisterResult.INVALID_EMAIL, result);
+        assertEquals(ResultCode.INVALID_EMAIL, result.resultCode);
     }
 
     @Test
@@ -83,9 +84,9 @@ public class UserServiceTest {
         String userId = "userId";
         String userPassword = "userPassword";
         String email = "email";
-        RegisterResult result = userService.register(userId, userPassword, email);
+        CommonResponse result = userService.register(userId, userPassword, email);
 
         // then
-        assertEquals(RegisterResult.WEAK_PASSWORD, result);
+        assertEquals(ResultCode.WEAK_PASSWORD, result.resultCode);
     }
 }

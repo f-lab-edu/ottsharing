@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import kr.flab.ottsharing.dto.response.common.CommonResponse;
 import kr.flab.ottsharing.entity.PartyWaiting;
 import kr.flab.ottsharing.entity.User;
-import kr.flab.ottsharing.protocol.DeleteWaitingResult;
 import kr.flab.ottsharing.repository.PartyWaitingRepository;
 import kr.flab.ottsharing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +27,11 @@ public class PartyWaitingService {
         waitRepo.save(waiting);
     }
   
-    public DeleteWaitingResult deleteWaiting(String userId) {
+    public CommonResponse deleteWaiting(String userId) {
       User user = userRepo.findByUserId(userId).get();
       PartyWaiting waiting = waitRepo.findByUser(user).get();
       waitRepo.delete(waiting);
-      return DeleteWaitingResult.SUCCESS;
+      return new CommonResponse();
     }
     
     public List<User> getTop3Waitings() {

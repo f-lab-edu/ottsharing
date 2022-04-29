@@ -7,14 +7,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.flab.ottsharing.protocol.MyParty;
-import kr.flab.ottsharing.protocol.PartyCreateResult;
-import kr.flab.ottsharing.protocol.PartyDeleteResult;
-import kr.flab.ottsharing.protocol.PartyJoinResult;
-import kr.flab.ottsharing.protocol.UpdatePartyInfo;
+import kr.flab.ottsharing.dto.request.PartyCreateDto;
+import kr.flab.ottsharing.dto.request.PartyIdDto;
+import kr.flab.ottsharing.dto.request.PartyUpdateDto;
+import kr.flab.ottsharing.dto.response.MyParty;
+import kr.flab.ottsharing.dto.response.common.CommonResponse;
 import kr.flab.ottsharing.service.PartyService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +23,8 @@ public class PartyController {
     private final PartyService partyServ;
 
     @PostMapping("/party/create")
-    public PartyCreateResult create(@CookieValue(name = "userId") String userId, @RequestParam String ottId, @RequestParam String ottPassword) {
-        return partyServ.create(userId, ottId, ottPassword);
+    public CommonResponse create(@CookieValue(name = "userId") String userId, @RequestBody PartyCreateDto createDto) {
+        return partyServ.create(userId, createDto.getOttId(), createDto.getOttPassword());
     }
 
     @GetMapping("/myParty")
@@ -34,22 +33,22 @@ public class PartyController {
     }
 
     @PostMapping("/party/join")
-    public PartyJoinResult joinParty(@CookieValue(name = "userId") String userId) {
+    public CommonResponse joinParty(@CookieValue(name = "userId") String userId) {
         return partyServ.join(userId);
     }
 
     @DeleteMapping("/party/deleteParty")
-    public PartyDeleteResult deleteParty(@CookieValue(name = "userId") String userId, @RequestParam Integer partyId) {
-        return partyServ.deleteParty(userId, partyId);
+    public CommonResponse deleteParty(@CookieValue(name = "userId") String userId, @RequestBody PartyIdDto partyIdDto) {
+        return partyServ.deleteParty(userId, partyIdDto.getPartyId());
     }
 
     @DeleteMapping("/party/getOutParty")
-    public String getOutParty(@CookieValue(name = "userId") String userId, @RequestParam Integer partyId) {
-        return partyServ.getOutParty(userId, partyId);
+    public CommonResponse getOutParty(@CookieValue(name = "userId") String userId, @RequestBody PartyIdDto partyIdDto) {
+        return partyServ.getOutParty(userId, partyIdDto.getPartyId());
     }
 
     @PostMapping("/party/updatePartyInfo")
-    public String updatePartyInfo(@CookieValue(name = "userId") String userId, @Valid @RequestBody UpdatePartyInfo info) {
+    public CommonResponse updatePartyInfo(@CookieValue(name = "userId") String userId, @Valid @RequestBody PartyUpdateDto info) {
         return partyServ.updatePartyInfo(userId, info);
     }
 }
