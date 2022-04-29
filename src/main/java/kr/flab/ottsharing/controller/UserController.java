@@ -3,6 +3,8 @@ package kr.flab.ottsharing.controller;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +42,10 @@ public class UserController {
     }
 
     @PostMapping("/logout")
+    @Caching(evict = {
+        @CacheEvict(value = "myPage", key = "#userId"),
+        @CacheEvict(value = "myParty", key = "#userId")
+    })
     public CommonResponse logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("userId", null);
         cookie.setMaxAge(0);

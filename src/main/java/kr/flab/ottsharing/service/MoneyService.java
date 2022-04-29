@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.dto.response.RefundResult;
@@ -47,6 +48,7 @@ public class MoneyService {
         return ResultCode.SUCCESS;
     }
 
+    @CacheEvict(value = "myPage", key = "#userId")
     public CommonResponse charge(String userId, int moneyToCharge) {
         User user = userRepository.findByUserId(userId).get();
         user.setMoney(user.getMoney()+ moneyToCharge);
@@ -56,6 +58,7 @@ public class MoneyService {
     }
 
     @Transactional
+    @CacheEvict(value = "myPage", key = "#userId")
     public CommonResponse withdraw(String userId, int moneyToWithdraw) {
         User user = userRepository.findByUserId(userId).get();
         if (user.getMoney() < moneyToWithdraw) {

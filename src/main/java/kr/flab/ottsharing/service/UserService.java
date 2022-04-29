@@ -3,6 +3,9 @@ package kr.flab.ottsharing.service;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.dto.response.MyInfo;
@@ -75,6 +78,10 @@ public class UserService {
         return VALID_EMAIL_PATTERN.matcher(email).matches();
     }
 
+    @Caching(evict = {
+        @CacheEvict(value = "myPage", key = "#userId"),
+        @CacheEvict(value = "myParty", key = "#userId")
+    })
     public User login(String userId) {
         Optional<User> user = userRepository.findByUserId(userId);
         if(user.isPresent()){
@@ -83,11 +90,13 @@ public class UserService {
         return null;
     }
 
+    @Cacheable(value = "myPage", key = "#userId")
     public MyInfo fetchMyInfo(String userId) {
         User user = userRepository.findByUserId(userId).get();
         return new MyInfo(userId, user.getEmail(), user.getMoney());
     }
 
+    @CacheEvict(value = "myPage", key = "#userId")
     public CommonResponse updateMyInfo(String userId, String changedPassword, String changedEmail) {
         User user = userRepository.findByUserId(userId).get();
         String passwordBeforeChange = user.getUserPassword();
