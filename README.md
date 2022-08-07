@@ -4,7 +4,7 @@ ottsharing은 OTT 계정 공유 중개 서비스입니다. 파티장이 계정�
 Java와 Spring Boot를 이용해 REST API 서버를 만들어보는걸 목표로 제작되었습니다.
 
 ## :pushpin: 목표 및 사용 기술 스택 
-<img src="https://img.shields.io/badge/Spring%20Boot-2.6.4-yellow"> <img src = "https://img.shields.io/badge/DataBase-MySQL-blue?logo=MySQL&logoColor=blue"> <img src = "https://img.shields.io/badge/Code%20Style-Naver%20CheckStyle-brightgreen?logo=naver&logoColor=brightgreen"> <img src="https://img.shields.io/badge/DataAccess-Spring%20JPA-lightgrey">
+<img src="https://img.shields.io/badge/Spring%20Boot-2.6.4-yellow"> <img src = "https://shields.io/badge/DataBase-MariaDB-blue?logo=mariadb&style=flat"> <img src = "https://img.shields.io/badge/Code%20Style-Naver%20CheckStyle-brightgreen?logo=naver&logoColor=brightgreen"> <img src="https://img.shields.io/badge/DataAccess-Spring%20JPA-lightgrey">
 * OTT 계정 공유 중개 서비스를 구현해 내는 것이 목표입니다.
 * 이유와 근거가 명확한 기술의 사용을 지향합니다.
 * 이 프로젝트를 통해 Spring Web/JPA 등을 사용하고 REST API 서버를 구현하는데 목표를 두고 있습니다. 
@@ -18,7 +18,7 @@ Java와 Spring Boot를 이용해 REST API 서버를 만들어보는걸 목표로
 * Git Flow, 코딩 컨벤션, 커밋 컨벤션 준수
 
 ## :pushpin: 프로젝트 구조도
-![image](https://user-images.githubusercontent.com/33937365/183288177-2dabc876-b61d-4788-8a26-3558d4b65ce4.png)
+![image](https://user-images.githubusercontent.com/33937365/183288666-95bead19-899e-41b1-9a50-36794c56fc92.png)
 
 ## :pushpin: ERD
 ![image](https://user-images.githubusercontent.com/33937365/183280542-d596dc1b-1032-422e-9c88-2a27aa3d29b8.png)
