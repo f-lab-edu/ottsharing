@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.dto.request.PartyUpdateDto;
@@ -37,6 +39,7 @@ public class PartyService {
     @Value("${ottsharing.serviceFee}")
     private int serviceFee;
 
+    @CacheEvict(value = "myParty", key = "#leaderId")
     public CommonResponse create(String leaderId, String ottId, String ottPassword) {
         User leader = userRepo.findByUserId(leaderId).get();
 
@@ -83,6 +86,7 @@ public class PartyService {
     }
 
     @Transactional
+    @CacheEvict(value = "myParty", key = "#userId")
     public CommonResponse deleteParty(String userId, Integer partyId) {
         Optional<User> user = userRepo.findByUserId(userId);
         if (!user.isPresent()) {
@@ -111,6 +115,7 @@ public class PartyService {
     }
 
     @Transactional
+    @CacheEvict(value = "myParty", key = "#userId")
     public CommonResponse getOutParty(String userId, Integer partyId) {
         Optional<User> user = userRepo.findByUserId(userId);
 
@@ -139,6 +144,7 @@ public class PartyService {
         return new CommonResponse();
     }
 
+    @Cacheable(value = "myParty", key = "#userId")
     public MyParty fetchMyParty(String userId) {
         User user = userRepo.findByUserId(userId).get();
 
@@ -167,6 +173,7 @@ public class PartyService {
         return new MyParty(ResultCode.HAS_NO_PARTY);
     }
 
+    @CacheEvict(value = "myParty", key = "#userId")
     public CommonResponse updatePartyInfo(String userId, PartyUpdateDto info) {
         User user = userRepo.findByUserId(userId).get();
         PartyMember partyMember = memberRepo.findOneByUser(user).get();
@@ -180,6 +187,7 @@ public class PartyService {
 
 
     @Transactional
+    @CacheEvict(value = "myParty", key = "#userId")
     public CommonResponse join(String userId) {
         User user = userRepo.findByUserId(userId).get();
 

@@ -3,6 +3,7 @@ package kr.flab.ottsharing.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import kr.flab.ottsharing.dto.response.common.CommonResponse;
@@ -27,6 +28,7 @@ public class PartyWaitingService {
         waitRepo.save(waiting);
     }
   
+    @CacheEvict(value = "myParty", key = "#userId")
     public CommonResponse deleteWaiting(String userId) {
       User user = userRepo.findByUserId(userId).get();
       PartyWaiting waiting = waitRepo.findByUser(user).get();
